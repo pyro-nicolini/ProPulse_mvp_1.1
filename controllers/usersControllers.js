@@ -18,7 +18,6 @@ const getUser = async (req, res) => {
       return res.status(403).json({ error: "No autorizado" });
     }
     const usuario = await usersModel.obtenerUsuario(userIdFromToken);
-    console.log(`Usuario ${userIdFromToken} encontrado`);
     res.status(200).json(usuario);
   } catch (err) {
     console.error("Error en getUser:", err);
@@ -29,21 +28,15 @@ const getUser = async (req, res) => {
 // Registrar nuevo usuario
 const registerUser = async (req, res) => {
   try {
-    const {
-      nombre,
-      email,
-      password
-    } = req.body;
-    console.log(req.body);
+    const { nombre, email, password } = req.body;
     const nuevoUsuario = await usersModel.crearUsuario({
       nombre,
       email,
-      password
+      password,
     });
     if (!nuevoUsuario || !nuevoUsuario.id) {
       return res.status(400).json({ error: "No se pudo crear el usuario" });
     }
-    console.log(`Usuario ${nuevoUsuario.id} creado`);
     res.status(201).json({ nuevoUsuario });
   } catch (error) {
     console.error("Error al crear usuario:", error);
@@ -64,31 +57,42 @@ const loginUser = async (req, res) => {
     if (!usuario) {
       return res.status(401).json({ error: "Credenciales incorrectas" });
     }
-    const {
-        id,
-      nombre,
-      rol,
-    } = usuario;
-
-    const token = jwt.sign(
-      {
-        id,
-        email,
-        nombre,
-        rol,
+    // datos para el payload
+    const payload = {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+    // generar token
+    const token = jwt.sign(payload, ultraSecreto, { expiresIn: "1d" });
+    // responder
+    res.status(200).json({
+      token,
+      user: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        fecha_creacion: usuario.fecha_creacion,
+        fecha_modificacion: usuario.fecha_modificacion,
       },
-      ultraSecreto,
-      { expiresIn: "1d" }
-    );
-    res.status(200).json({ token });
+    });
   } catch (err) {
     console.error("Error en loginUser:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message || "Error en login" });
   }
 };
 
 const getUsers = async (req, res) => {
-    try {
+  try {
+    const Authorization = req.header("Authorization");
+    const token = Authorization?.split("Bearer ")[1];
+    const payload = jwt.verify(token, ultraSecreto);
+    if (payload.rol !== "admin") {
+      return res.status(403).send("No autorizado");
+    }
+
     const usuarios = await usersModel.obtenerUsuarios();
     res.status(200).json(usuarios);
   } catch (err) {
@@ -107,24 +111,20 @@ const updateUser = async (req, res) => {
     }
     const token = Authorization.split("Bearer ")[1];
     const payload = jwt.verify(token, ultraSecreto);
-    console.log("payload:", payload);
-    if (Number(payload.id) !== Number(id) && payload.rol !== 'admin') {
+    if (Number(payload.id) !== Number(id) && payload.rol !== "admin") {
       return res
         .status(403)
         .send("No tienes permiso para actualizar este usuario");
     }
-    const fecha_creacion = new Date().toISOString();
+    const fecha_modificacion = new Date().toISOString();
     const { nombre, email, password, rol } = req.body;
-    await usersModel.actualizarUsuario(
-      id,
-      {
-        nombre,
-        email,
-        password,
-        rol,
-        fecha_creacion
-      }
-    );
+    await usersModel.actualizarUsuario(id, {
+      nombre,
+      email,
+      password,
+      rol,
+      fecha_modificacion,
+    });
     res.status(200).json({ mensaje: `Usuario ${id} actualizado con éxito` });
   } catch (err) {
     console.error("Error en updateUser:", err);
@@ -142,7 +142,7 @@ const deleteUser = async (req, res) => {
     }
     const token = Authorization.split("Bearer ")[1];
     const payload = jwt.verify(token, ultraSecreto);
-    if (payload.rol !== 'admin') {
+    if (payload.rol !== "admin") {
       return res
         .status(403)
         .send("No tienes permiso para eliminar este usuario");
@@ -155,4 +155,11 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, getUser, getUsers, loginUser, updateUser, deleteUser };
+module.exports = {
+  registerUser,
+  getUser,
+  getUsers,
+  loginUser,
+  updateUser,
+  deleteUser,
+};

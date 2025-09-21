@@ -22,10 +22,10 @@ router.delete("/productos/admin/:id", productsController.deleteProduct);
 
 */
 
-router.get("/carritos/me", cartsController.getCarts);  // Obtiene/crea carrito abierto y reconcilia stock
-router.post("/carritos/detalle", cartsController.createCart); // Agrega producto al carrito (snapshot de precio)
-router.put("/carritos/detalle/:id_item", cartsController.updateCart);  // Actualiza cantidad (clamp por stock/servicio)
-router.delete("/carritos/detalle/:id_item", cartsController.deleteCart); // Elimina línea (204 idempotente) 
+router.get("/carritos/me", cartsController.getOrCreateCart);  // Obtiene/crea carrito abierto y reconcilia stock
+router.post("/carritos/detalle", cartsController.AddItemCart); // Agrega producto al carrito (snapshot de precio)
+// router.put("/carritos/detalle/:id_item", cartsController.updateCart);  // Actualiza cantidad (clamp por stock/servicio)
+// router.delete("/carritos/detalle/:id_item", cartsController.deleteCart); // Elimina línea (204 idempotente) 
 
 /*
 
@@ -36,10 +36,10 @@ router.delete("/carritos/detalle/:id_item", cartsController.deleteCart); // Elim
 
 */
 
-router.post("/pedidos", cartsController.createCart); // Confirma carrito → crea pedido, descuenta stock y cierra carrito
-router.get("/pedidos", cartsController.getCarts); // Lista mis pedidos
-router.get("/pedidos/:id", cartsController.getCart);  //Detalle (dueño o admin)
-router.put("/pedidos/admin/:id", cartsController.updateCart); // Actualizar estado (admin)
+// router.post("/pedidos", cartsController.createCart); // Confirma carrito → crea pedido, descuenta stock y cierra carrito
+// router.get("/pedidos", cartsController.getCarts); // Lista mis pedidos
+// router.get("/pedidos/:id", cartsController.getCart);  //Detalle (dueño o admin)
+// router.put("/pedidos/admin/:id", cartsController.updateCart); // Actualizar estado (admin)
 
 /*
 PUT /pedidos/admin/{id}
@@ -53,18 +53,18 @@ Request → aquí sí se debe indicar el nuevo estado.
 */
 
 // al tener la tabla SQL como unica, usamos delete, si queremos registros usamos PUT.
-router.get("/favoritos/", productsController.getCarts);  // Obtiene/crea carrito abierto y reconcilia stock
-router.post("/favoritos/", productsController.createCart); // Agrega producto al carrito (snapshot de precio)
-router.delete("/favoritos/:id_favorito", productsController.deleteCart);  // Elimina línea (204 idempotente)
+// router.get("/favoritos/", productsController.getCarts);  // Obtiene/crea carrito abierto y reconcilia stock
+// router.post("/favoritos/", productsController.createCart); // Agrega producto al carrito (snapshot de precio)
+// router.delete("/favoritos/:id_favorito", productsController.deleteCart);  // Elimina línea (204 idempotente)
 
 /*
 { "id_producto": 10 }
 */
 
-router.get("/resenas/productos/:id_producto", productsController.getReviewsByProduct); // Listar reseñas de un producto
-router.post("/resenas/productos/:id_producto", productsController.createReview); // Crear reseña (dueño de pedido con producto entregado)
-router.put("/resenas/:id_resena", productsController.updateReview); // Actualizar reseña (dueño)
-router.delete("/resenas/:id_resena", productsController.deleteReview); // Eliminar reseña (dueño o admin)
+// router.get("/resenas/productos/:id_producto", productsController.getReviewsByProduct); // Listar reseñas de un producto
+// router.post("/resenas/productos/:id_producto", productsController.createReview); // Crear reseña (dueño de pedido con producto entregado)
+// router.put("/resenas/:id_resena", productsController.updateReview); // Actualizar reseña (dueño)
+// router.delete("/resenas/:id_resena", productsController.deleteReview); // Eliminar reseña (dueño o admin)
 
 /*
 {
