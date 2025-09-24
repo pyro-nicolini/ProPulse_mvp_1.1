@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instructivo Testing – ProPulseApi MVP</title>
+  <style>
+    :root {
+      --bg: #0f172a; --card: #111827; --muted: #94a3b8;
+      --ink: #e5e7eb; --accent: #22d3ee; --ok: #10b981;
+      --warn: #f59e0b; --err: #ef4444; --info: #60a5fa;
+      --b: #1f2937;
+    }
+    body { margin:0; background:#0b1220; color:var(--ink);
+           font:15px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Ubuntu; }
+    header { padding:32px 20px; text-align:center; border-bottom:1px solid #1e293b; }
+    h1 { margin:0; font-size:28px; }
+    p.lead { max-width:900px; margin:0.5rem auto 0; color:var(--muted); }
+    main { max-width:1100px; margin:24px auto; padding:0 16px 64px; }
+    .card { background:rgba(17,24,39,.7); border:1px solid #1f2937;
+            border-radius:16px; padding:18px; margin:14px 0;
+            box-shadow:0 6px 24px rgba(0,0,0,.35); }
+    h2 { font-size:20px; margin:6px 0 12px; color:#38bdf8; }
+    table { width:100%; border-collapse:separate; border-spacing:0;
+            border-radius:12px; border:1px solid #263244; margin:10px 0; }
+    thead th { background:#0f1a2b; color:#c7d2fe; padding:10px; text-align:left; }
+    tbody td { padding:10px; border-bottom:1px solid #223047; }
+    tbody tr:nth-child(even) td { background:#0c1626; }
+    .pill { display:inline-flex; gap:6px; padding:2px 8px; border-radius:999px;
+            font-size:12px; font-weight:600; }
+    .GET { background:#0b2536; color:#7dd3fc; }
+    .POST { background:#07261d; color:#6ee7b7; }
+    .PUT { background:#2a2210; color:#fcd34d; }
+    .DELETE { background:#2a1212; color:#fca5a5; }
+    .AUTH { background:#1d2540; color:#a5b4fc; }
+    code,pre { font-family:ui-monospace,Consolas,Monaco,monospace; }
+    pre { background:#0b1220; border:1px solid #273447; border-radius:12px;
+          padding:12px; overflow:auto; font-size:13px; }
+    .req::before { content:"Request"; display:block; color:#7dd3fc; margin-bottom:6px; }
+    .res::before { content:"Response"; display:block; color:#34d399; margin-bottom:6px; }
+    .note { font-size:13px; color:#9ca3af; }
+    footer { opacity:0.8; text-align:center; margin-top:28px; color:#8da2c5; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🧪 Instructivo de Testing – ProPulseApi MVP</h1>
+  <p class="lead">Endpoints, reglas, checklist de errores, ejemplos de Jest + Supertest y pruebas E2E.</p>
+</header>
+<main>
+
+  <!-- ENDPOINTS -->
+  <div class="card">
+    <h2>Endpoints Principales</h2>
+    <p>Esta API REST maneja usuarios, productos, carritos, pedidos, favoritos y reseñas.</p>
+    <p>Autenticación: <code>Bearer JWT</code></p>
+    <ul>
+      <li><b>Auth:</b> /auth/register, /auth/login, /auth/me</li>
+      <li><b>Usuarios:</b> /usuarios/:id (PUT, DELETE)</li>
+      <li><b>Productos:</b> /productos, /productos/:id, /productos/admin/*</li>
+      <li><b>Carritos:</b> /carritos/me, /carritos/detalle</li>
+      <li><b>Pedidos:</b> /pedidos, /pedidos/:id</li>
+      <li><b>Favoritos:</b> /favoritos, /favoritos/:id_favorito</li>
+      <li><b>Reseñas:</b> /resenas/producto/:id_producto, /resenas/:id_resena</li>
+    </ul>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="card">
+    <h2>Checklist de Testings (Jest + Supertest)</h2>
+    <ul>
+      <li>🔑 <b>Auth:</b> registro duplicado (409), login inválido (401), token inválido (401).</li>
+      <li>🛒 <b>Carritos:</b> no mezclar carritos de usuarios, persistencia tras reload, sumar items en vez de duplicar, clamp stock y servicios.</li>
+      <li>❤️ <b>Favoritos:</b> POST duplicado da 409, eliminar funciona, likes_count se sincroniza.</li>
+      <li>⭐ <b>Reseñas:</b> unicidad usuario+producto, comentario ≤300 chars, calificación 1–5, prohibido editar/borrar reseña ajena.</li>
+      <li>🛠️ <b>Admin:</b> cliente no crea producto, admin no borra producto de otro admin (403).</li>
+    </ul>
+  </div>
+
+  <!-- JEST TUTORIAL -->
+  <div class="card">
+    <h2>Tutorial: Cómo crear tests con Jest + Supertest</h2>
+    <ol>
+      <li>Instala dependencias: <code>npm i --save-dev jest supertest</code></li>
+      <li>Agrega script en package.json:
+        <pre>"scripts": { "test": "jest --runInBand" }</pre>
+      </li>
+      <li>Crea <code>tests/api.test.js</code> e importa:
+        <pre>const request = require("supertest"); const app = require("../app");</pre>
+      </li>
+      <li>Ejemplo test Auth:
+        <pre>
+it("rechaza login inválido", async () => {
+  const res = await request(app).post("/auth/login").send({
+    email: "wrong@mail.com", password: "fail"
+  });
+  expect(res.statusCode).toBe(401);
+});</pre>
+      </li>
+    </ol>
+  </div>
+
+  <!-- TESTS POR MODULO -->
+  <div class="card">
+    <h2>Ejemplos de Tests</h2>
+    <h3>Carrito</h3>
+    <pre>
+it("un usuario no ve el carrito de otro", async () => {
+  const tokenA = await login("a@test.com","123");
+  const tokenB = await login("b@test.com","123");
+  await request(app).post("/carritos/detalle")
+    .set("Authorization",`Bearer ${tokenA}`)
+    .send({ id_producto:1, cantidad:1 });
+  const resB = await request(app).get("/carritos/me")
+    .set("Authorization",`Bearer ${tokenB}`);
+  expect(resB.body.items).toHaveLength(0);
+});</pre>
+
+    <h3>Favoritos</h3>
+    <pre>
+it("rechaza favorito duplicado", async () => {
+  const token = await login("c@test.com","123");
+  await request(app).post("/favoritos")
+    .set("Authorization",`Bearer ${token}`)
+    .send({ id_producto:2 });
+  const res = await request(app).post("/favoritos")
+    .set("Authorization",`Bearer ${token}`)
+    .send({ id_producto:2 });
+  expect(res.statusCode).toBe(409);
+});</pre>
+
+    <h3>Reseñas</h3>
+    <pre>
+it("no acepta comentario >300 chars", async () => {
+  const token = await login("d@test.com","123");
+  const comentario = "a".repeat(301);
+  const res = await request(app).post("/resenas/producto/1")
+    .set("Authorization",`Bearer ${token}`)
+    .send({ comentario, calificacion:5 });
+  expect(res.statusCode).toBe(400);
+});</pre>
+  </div>
+
+  <!-- E2E -->
+  <div class="card">
+    <h2>Pruebas End-to-End (Cypress)</h2>
+    <pre>
+// flujo registro → carrito → pedido
+it("flujo de compra", () => {
+  cy.visit("/register");
+  cy.get("input[name=email]").type("nuevo@e2e.com");
+  cy.get("input[name=password]").type("123456");
+  cy.get("button[type=submit]").click();
+
+  cy.contains("Agregar").first().click();
+  cy.get("#carrito").click();
+  cy.contains("Confirmar pedido").click();
+
+  cy.url().should("include","/pedidos");
+  cy.contains("Pedido confirmado");
+});</pre>
+  </div>
+
+</main>
+<footer>
+  ProPulseApi – Documentación, Checklist y Tutorial de Testing con Jest + Supertest + Cypress 🚀
+</footer>
+</body>
+</html>

@@ -1,10 +1,14 @@
 // server.js
 const express = require("express");
 const app = express();
+
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+
 const authRoutes = require('./routes/auth');
+const productsRoutes = require('./routes/products');
 const marketplaceRoutes = require('./routes/marketplace');
+
 const path = require('path');
 const fs = require('fs');
 
@@ -28,6 +32,7 @@ app.use((req, _res, next) => {
 });
 
 app.use("/", authRoutes);
+app.use("/", productsRoutes);
 app.use("/", marketplaceRoutes);
 
 app.get("/", (_, res) => {

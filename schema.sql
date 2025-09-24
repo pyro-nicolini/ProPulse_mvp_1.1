@@ -39,17 +39,10 @@ estado VARCHAR(25) NOT NULL DEFAULT 'abierto' CHECK (estado IN('abierto','cerrad
 fecha_creacion TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE VIEW total_carritos AS
-SELECT id_usuario, SUM(total) as total_carrito
-FROM (
-  SELECT id_usuario, SUM(subtotal) as total
-  FROM carritos_detalle
-  JOIN carritos ON carritos.id_carrito = carritos_detalle.id_carrito
-  WHERE carritos.estado = 'abierto'
-  GROUP BY id_usuario
-) as subquery
-GROUP BY id_usuario;
-
+-- Agregar INDICE UNICO CONDICIONAL (solo permite 1 "abierto" por usuario) y muchos "cerrados"
+CREATE UNIQUE INDEX IF NOT EXISTS uq_usuario_carrito_abierto
+ON carritos (id_usuario)
+WHERE estado = 'abierto';
 
 CREATE TABLE IF NOT EXISTS carritos_detalle (
 id_item SERIAL PRIMARY KEY,

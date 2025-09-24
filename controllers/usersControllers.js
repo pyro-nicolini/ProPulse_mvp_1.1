@@ -1,23 +1,12 @@
 const usersModel = require("../models/usersModel.js");
-const jwt = require("jsonwebtoken");
 
-const ultraSecreto = process.env.JWT_SECRET || "az_AZ";
 
-// Obtener usuario solo si el id del token coincide con el id solicitado
+// Obtener usuario solo si el id del token coincide con el id solicitado. 
+// gracias al MIDDLEWARE se puede usar  req.user.id, req.user.rol, etc
+
 const getUser = async (req, res) => {
   try {
-    const Authorization = req.header("Authorization");
-    if (!Authorization || !Authorization.startsWith("Bearer ")) {
-      return res.status(401).send("Token no proporcionado o malformado");
-    }
-    const token = Authorization.split("Bearer ")[1];
-    const payload = jwt.verify(token, ultraSecreto);
-    const userIdFromToken = parseInt(payload.id);
-
-    if (!userIdFromToken) {
-      return res.status(403).json({ error: "No autorizado" });
-    }
-    const usuario = await usersModel.obtenerUsuario(userIdFromToken);
+    const usuario = await usersModel.obtenerUsuario(req.user.id);
     res.status(200).json(usuario);
   } catch (err) {
     console.error("Error en getUser:", err);
@@ -44,19 +33,21 @@ const registerUser = async (req, res) => {
   }
 };
 
+const jwt = require("jsonwebtoken");
+const ultraSecreto = process.env.JWT_SECRET || "az_AZ";
 // Login de usuario y generación de JWT
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ error: "email y password son obligatorios" });
+      return res.status(400).json({ error: "email y password son obligatorios" });
     }
+
     const usuario = await usersModel.verificarCredenciales(email, password);
     if (!usuario) {
       return res.status(401).json({ error: "Credenciales incorrectas" });
     }
+
     // datos para el payload
     const payload = {
       id: usuario.id,
@@ -64,8 +55,10 @@ const loginUser = async (req, res) => {
       email: usuario.email,
       rol: usuario.rol,
     };
+
     // generar token
     const token = jwt.sign(payload, ultraSecreto, { expiresIn: "1d" });
+
     // responder
     res.status(200).json({
       token,
@@ -84,45 +77,49 @@ const loginUser = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
+// la autorizacion de admin se maneja en el router con el middleware
+const admin_getUsers = async (req, res) => {
   try {
-    const Authorization = req.header("Authorization");
-    const token = Authorization?.split("Bearer ")[1];
-    const payload = jwt.verify(token, ultraSecreto);
-    if (payload.rol !== "admin") {
-      return res.status(403).send("No autorizado");
-    }
-
     const usuarios = await usersModel.obtenerUsuarios();
     res.status(200).json(usuarios);
   } catch (err) {
-    console.error("Error en getUsers:", err);
+    console.error("Error en admin_getUsers:", err);
     res.status(500).json({ error: "Error al obtener usuarios" });
   }
 };
 
-// Actualizar usuario
+// VIEJA VERSION
+// const admin_getUsers = async (req, res) => {
+//   try {
+//     const Authorization = req.header("Authorization");
+//     const token = Authorization?.split("Bearer ")[1];
+//     const payload = jwt.verify(token, ultraSecreto);
+//     if (payload.rol !== "admin") {
+//       return res.status(403).send("No autorizado");
+//     }
+
+//     const usuarios = await usersModel.obtenerUsuarios();
+//     res.status(200).json(usuarios);
+//   } catch (err) {
+//     console.error("Error en admin_getUsers:", err);
+//     res.status(500).json({ error: "Error al obtener usuarios" });
+//   }
+// };
+
+// Actualizar usuario y admin (global)
 const updateUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const Authorization = req.header("Authorization");
-    if (!Authorization || !Authorization.startsWith("Bearer ")) {
-      return res.status(401).send("Token no proporcionado o malformado");
-    }
-    const token = Authorization.split("Bearer ")[1];
-    const payload = jwt.verify(token, ultraSecreto);
-    if (Number(payload.id) !== Number(id) && payload.rol !== "admin") {
-      return res
-        .status(403)
-        .send("No tienes permiso para actualizar este usuario");
+    // validación: puede actualizarse a sí mismo o si es admin
+    if (Number(req.user.id) !== Number(id) && req.user.rol !== "admin") {
+      return res.status(403).send("No tienes permiso para actualizar este usuario");
     }
     const fecha_modificacion = new Date().toISOString();
-    const { nombre, email, password, rol } = req.body;
+    const { nombre, email, password } = req.body;
     await usersModel.actualizarUsuario(id, {
       nombre,
       email,
       password,
-      rol,
       fecha_modificacion,
     });
     res.status(200).json({ mensaje: `Usuario ${id} actualizado con éxito` });
@@ -131,26 +128,14 @@ const updateUser = async (req, res) => {
     res.status(err.code || 500).json({ error: "Error al actualizar usuario" });
   }
 };
-
 // Eliminar usuario (solo admin puede eliminar)
-const deleteUser = async (req, res) => {
+const admin_deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const Authorization = req.header("Authorization");
-    if (!Authorization || !Authorization.startsWith("Bearer ")) {
-      return res.status(401).send("Token no proporcionado o malformado");
-    }
-    const token = Authorization.split("Bearer ")[1];
-    const payload = jwt.verify(token, ultraSecreto);
-    if (payload.rol !== "admin") {
-      return res
-        .status(403)
-        .send("No tienes permiso para eliminar este usuario");
-    }
     await usersModel.borrarUsuario(id);
     res.status(200).json({ mensaje: `Usuario ${id} eliminado con éxito` });
   } catch (err) {
-    console.error("Error en deleteUser:", err);
+    console.error("Error en admin_deleteUser:", err);
     res.status(err.code || 500).json({ error: "Error al eliminar usuario" });
   }
 };
@@ -158,8 +143,8 @@ const deleteUser = async (req, res) => {
 module.exports = {
   registerUser,
   getUser,
-  getUsers,
+  admin_getUsers,
   loginUser,
   updateUser,
-  deleteUser,
+  admin_deleteUser,
 };

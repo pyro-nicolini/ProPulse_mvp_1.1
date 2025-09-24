@@ -30,3 +30,4 @@ INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo, url_imagen, d
 (1, 'Taller Movilidad Corporal',  'Workshop grupal de movilidad y estiramientos.', NULL, 'servicio', 'https://images.pexels.com/photos/25596885/pexels-photo-25596885.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop', false, true, 90000),
 (1, 'Servicio Sonido Básico',     'Amplificación para evento deportivo pequeño.',  NULL, 'servicio', 'https://images.pexels.com/photos/30836116/pexels-photo-30836116.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop', false, true, 80000),
 (1, 'Producción Evento Fit Day',  'Coordinación full-day + staff.',                NULL, 'servicio', 'https://images.pexels.com/photos/18466691/pexels-photo-18466691.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop', true,  true, 520000);
+    

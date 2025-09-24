@@ -51,11 +51,11 @@ const borrarUsuario = async (id) => {
 };
 
 const actualizarUsuario = async (id, cambios) => {
-  const { nombre, email, password, rol, fecha_modificacion } = cambios;
+  const { nombre, email, password, fecha_modificacion } = cambios;
   const saltRounds = 10;
     const passwordEncriptada = bcrypt.hashSync(password, saltRounds);
-    const values = [nombre, email, passwordEncriptada, rol, fecha_modificacion, id];
-    const consulta = `UPDATE usuarios SET nombre = $1, email = $2, password = $3, rol = $4, fecha_modificacion = $5 WHERE id = $6 RETURNING *;`;
+    const values = [nombre, email, passwordEncriptada, fecha_modificacion, id];
+    const consulta = `UPDATE usuarios SET nombre = $1, email = $2, password = $3, fecha_modificacion = $5 WHERE id = $6 RETURNING *;`;
     const { rows, rowCount } = await pool.query(consulta, values);
     if (!rowCount)
       throw { code: 404, message: `No se encontro ningun user con id: ${id}` };
