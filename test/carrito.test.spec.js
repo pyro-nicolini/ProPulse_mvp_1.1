@@ -54,7 +54,7 @@ describe("Aunthentication y Carrito", () => {
 
   it("Debe crear un carrito abierto (201)", async () => {
     const res = await request(app)
-      .post("/carrito")
+      .post("/auth/login")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(201);

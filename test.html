@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ProPulse API - Suite de Tests Completa</title>
+  <style>
+    :root {
+      --bg:#0f1220; --panel:#151930; --muted:#9aa3b2; --text:#e8ecf1; --accent:#5dd3ff; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+      --code-bg:#0b0e1a; --code-bd:#252b47;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans',sans-serif; color:var(--text); background:linear-gradient(180deg,var(--bg),#0b0e19 60%);}
+    .container{max-width:980px; margin:0 auto; padding:32px 20px 64px;}
+    header{margin-bottom:18px}
+    h1{font-size:2rem; line-height:1.2; margin:0 0 10px}
+    .lead{color:var(--muted)}
+    h2{margin-top:28px; font-size:1.35rem; border-left:4px solid var(--accent); padding-left:10px}
+    h3{margin-top:22px; font-size:1.1rem}
+    p{line-height:1.65}
+    ul{padding-left:1.2rem}
+    code, pre{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    pre{background:var(--code-bg); border:1px solid var(--code-bd); border-radius:10px; padding:14px; overflow:auto; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02)}
+    code.inline{background:var(--code-bg); border:1px solid var(--code-bd); border-radius:6px; padding:0 4px}
+    .panel{background:var(--panel); border:1px solid #222748; border-radius:16px; padding:18px; margin:16px 0}
+    .kpi{display:inline-block; font-weight:600; background:#0e1429; border:1px solid #223059; padding:4px 10px; border-radius:999px; color:#cfe8ff}
+    .status{display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; border:1px solid #263154; background:#0e1430; margin-right:8px}
+    .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+    hr{border:none; height:1px; background:linear-gradient(90deg,#273056,transparent); margin:28px 0}
+    .small{color:var(--muted); font-size:.95rem}
+    .muted{color:var(--muted)}
+    .badge{display:inline-block; padding:2px 8px; border-radius:6px; background:#0f1633; border:1px solid #27315a; color:#cfe1ff; font-size:.85rem}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .list-compact li{margin:4px 0}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ProPulse API - Suite de Tests Completa</h1>
+      <p class="lead">Documento de referencia del suite de pruebas automatizadas para la API de ProPulse.</p>
+      <span class="kpi">10 evaluaciones principales</span>
+    </header>
+
+    <section class="panel">
+      <h2>📝 Descripción General</h2>
+      <p>Este documento describe el suite de tests completo para la API de ProPulse, que incluye <strong>10 evaluaciones principales</strong> que cubren todos los endpoints críticos de la aplicación.</p>
+    </section>
+
+    <section class="panel">
+      <h2>🚀 Cómo Ejecutar los Tests</h2>
+      <h3>Ejecutar todos los tests:</h3>
+      <pre><code class="language-bash">npm test</code></pre>
+
+      <h3>Ejecutar solo el test suite completo:</h3>
+      <pre><code class="language-bash">npm test -- --testNamePattern="PROPULSE API - Test Suite Completo"</code></pre>
+
+      <h3>Ejecutar tests específicos:</h3>
+      <pre><code class="language-bash">npm test complete-api.test.spec.js</code></pre>
+    </section>
+
+    <section class="panel">
+      <h2>📊 Evaluaciones Incluidas</h2>
+
+      <h3>1. <strong>AUTENTICACIÓN - Registro de Usuario</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Archivo</span> <code class="inline">complete-api.test.spec.js</code></li>
+        <li><span class="badge">Endpoints</span> <code class="inline">POST /auth/register</code></li>
+        <li><span class="badge">Casos</span> ✅ Registro (201) · ✅ Email duplicado (409)</li>
+        <li><span class="badge">Objetivo</span> Verificar registro y manejo de duplicados</li>
+      </ul>
+
+      <h3>2. <strong>AUTENTICACIÓN - Login de Usuario</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">POST /auth/login</code></li>
+        <li><span class="badge">Casos</span> ✅ Login ok (200) · ✅ Credenciales inválidas (401)</li>
+        <li><span class="badge">Objetivo</span> Validar autenticación y obtención de JWT</li>
+      </ul>
+
+      <h3>3. <strong>PERFIL - Datos del Usuario</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">GET /auth/me</code></li>
+        <li><span class="badge">Casos</span> ✅ Perfil (200) · ✅ Sin token (401)</li>
+        <li><span class="badge">Objetivo</span> Proteger rutas y recuperar perfil</li>
+      </ul>
+
+      <h3>4. <strong>PRODUCTOS - Listado y Detalle</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">GET /productos</code>, <code class="inline">GET /productos/:id</code></li>
+        <li><span class="badge">Casos</span> ✅ Lista (200) · ✅ Detalle (200)</li>
+        <li><span class="badge">Objetivo</span> Catálogo básico de productos</li>
+      </ul>
+
+      <h3>5. <strong>INTERACCIONES - Sistema de Likes</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">POST /likes/:id</code>, <code class="inline">GET /likes</code></li>
+        <li><span class="badge">Casos</span> ✅ Agregar like (200/201) · ✅ Mis likes (200)</li>
+        <li><span class="badge">Objetivo</span> Favoritos e interacciones</li>
+      </ul>
+
+      <h3>6. <strong>CARRITO - Gestión de Productos</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">GET /carritos/me</code>, <code class="inline">PUT /carritos/detalle</code>, <code class="inline">GET /carritos/me/total</code></li>
+        <li><span class="badge">Casos</span> ✅ Mi carrito (200) · ✅ Agregar (200/201) · ✅ Total (200)</li>
+        <li><span class="badge">Objetivo</span> Funcionalidad base del carrito</li>
+      </ul>
+
+      <h3>7. <strong>PEDIDOS - Proceso de Checkout</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">POST /pedidos/checkout</code>, <code class="inline">GET /pedidos/me</code></li>
+        <li><span class="badge">Casos</span> ✅ Checkout (200/201) · ✅ Historial (200)</li>
+        <li><span class="badge">Objetivo</span> Flujo de compra y pedidos</li>
+      </ul>
+
+      <h3>8. <strong>RESEÑAS - Sistema de Comentarios</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">POST /resenas/:id</code>, <code class="inline">GET /resenas/:id</code></li>
+        <li><span class="badge">Casos</span> ✅ Agregar (200/201) · ✅ Listar (200)</li>
+        <li><span class="badge">Objetivo</span> Reviews y calificaciones</li>
+      </ul>
+
+      <h3>9. <strong>CARRITO AVANZADO - Modificación y Eliminación</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">PATCH /carritos/detalle</code>, <code class="inline">DELETE /carritos/detalle</code></li>
+        <li><span class="badge">Casos</span> ✅ Reducir cantidad (200) · ✅ Eliminar (200/204)</li>
+        <li><span class="badge">Objetivo</span> Operaciones avanzadas</li>
+      </ul>
+
+      <h3>10. <strong>API GENERAL - Información del Sistema</strong></h3>
+      <ul class="list-compact">
+        <li><span class="badge">Endpoints</span> <code class="inline">GET /</code>, <code class="inline">GET /ruta/inexistente</code></li>
+        <li><span class="badge">Casos</span> ✅ Info (200) · ✅ 404 correcto (404)</li>
+        <li><span class="badge">Objetivo</span> Info y manejo de errores</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>🔧 Configuración del Entorno de Tests</h2>
+      <h3>Dependencias requeridas:</h3>
+      <pre><code class="language-json">{
+  "jest": "^28.1.3",
+  "supertest": "^6.2.4"
+}</code></pre>
+
+      <h3>Variables globales utilizadas:</h3>
+      <ul>
+        <li><code class="inline">userToken</code>: Token JWT para autenticación</li>
+        <li><code class="inline">adminToken</code>: Token para operaciones administrativas</li>
+        <li><code class="inline">userId</code>: ID del usuario de prueba</li>
+        <li><code class="inline">productId</code>: ID del producto utilizado en tests</li>
+        <li><code class="inline">carritoId</code>: ID del carrito de prueba</li>
+        <li><code class="inline">pedidoId</code>: ID del pedido generado</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>⚠️ Consideraciones Importantes</h2>
+      <h3>Estado de la Base de Datos</h3>
+      <ul>
+        <li>Los tests asumen que existe al menos un producto en la base de datos</li>
+        <li>Si no hay productos, algunos tests mostrarán advertencias pero no fallarán</li>
+        <li>Es recomendable ejecutar el seed de la base de datos antes de los tests</li>
+      </ul>
+
+      <h3>Manejo de Errores</h3>
+      <ul>
+        <li>Los tests están diseñados para ser resilientes a datos faltantes</li>
+        <li>Se muestran mensajes informativos cuando faltan dependencias</li>
+        <li>Los tests continúan ejecutándose aunque algunos recursos no estén disponibles</li>
+      </ul>
+
+      <h3>Orden de Ejecución</h3>
+      <ul>
+        <li>Los tests están diseñados para ejecutarse en el orden especificado</li>
+        <li>Cada test prepara el estado necesario para el siguiente</li>
+        <li>Se comparten variables globales entre tests relacionados</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>📈 Interpretación de Resultados</h2>
+      <h3>Códigos de Estado Esperados:</h3>
+      <ul class="list-compact">
+        <li><strong>200</strong>: Operación exitosa</li>
+        <li><strong>201</strong>: Recurso creado exitosamente</li>
+        <li><strong>204</strong>: Operación exitosa sin contenido</li>
+        <li><strong>400</strong>: Error de validación</li>
+        <li><strong>401</strong>: No autorizado</li>
+        <li><strong>404</strong>: Recurso no encontrado</li>
+        <li><strong>409</strong>: Conflicto (p. ej., email duplicado)</li>
+        <li><strong>500</strong>: Error interno del servidor</li>
+      </ul>
+
+      <h3>Símbolos en la Salida:</h3>
+      <p>
+        <span class="status ok">✅ Test ok</span>
+        <span class="status warn">⚠️ Con advertencias</span>
+        <span class="status err">❌ Falló</span>
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>🐛 Troubleshooting</h2>
+      <h3>Errores Comunes:</h3>
+      <ol>
+        <li><strong>"No hay productos disponibles"</strong>
+          <ul>
+            <li>Ejecutar: <code class="inline">npm run seed</code> (si existe)</li>
+            <li>O insertar datos de prueba manualmente</li>
+          </ul>
+        </li>
+        <li><strong>"Error de token inválido"</strong>
+          <ul>
+            <li>Verificar que el sistema de autenticación esté funcionando</li>
+            <li>Comprobar configuración JWT en variables de entorno</li>
+          </ul>
+        </li>
+        <li><strong>"Tests failing on carrito operations"</strong>
+          <ul>
+            <li>Verificar rutas de carrito</li>
+            <li>Comprobar middleware de autenticación</li>
+          </ul>
+        </li>
+        <li><strong>"Database connection errors"</strong>
+          <ul>
+            <li>Verificar configuración de base de datos</li>
+            <li>Asegurar que la base esté ejecutándose</li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <section class="panel">
+      <h2>📄 Archivos Relacionados</h2>
+      <ul>
+        <li><code class="inline">test/complete-api.test.spec.js</code> — Suite principal</li>
+        <li><code class="inline">test/carrito.test.spec.js</code> — Carrito</li>
+        <li><code class="inline">test/auth.test.spec.js</code> — Autenticación (placeholder)</li>
+        <li><code class="inline">server.js</code> — Servidor</li>
+        <li><code class="inline">package.json</code> — Scripts de test</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>🎯 Objetivos de Calidad</h2>
+      <ul>
+        <li><strong>Cobertura</strong>: Probar todos los endpoints principales</li>
+        <li><strong>Integración</strong>: Verificar flujos completos de usuario</li>
+        <li><strong>Robustez</strong>: Manejar casos de error y validaciones</li>
+        <li><strong>Automatización</strong>: Permitir ejecución en CI/CD</li>
+        <li><strong>Documentación</strong>: Servir como documentación viva</li>
+      </ul>
+      <hr />
+      <p class="small muted"><em>Última actualización: Septiembre 2025</em></p>
+    </section>
+  </div>
+</body>
+</html>
