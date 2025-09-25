@@ -44,7 +44,7 @@ const createProduct = async (req, res) => {
     const result = await productsModel.crearProducto(
       titulo,
       descripcion,
-      stock,      // ✅ orden corregido
+      stock,
       tipo,
       url_imagen,
       precio
@@ -58,7 +58,15 @@ const createProduct = async (req, res) => {
 // PUT actualizar producto
 const updateProduct = async (req, res) => {
   try {
-    const { id_producto, titulo, descripcion, stock, tipo, url_imagen, precio } = req.body;
+    const {
+      id_producto,
+      titulo,
+      descripcion,
+      stock,
+      tipo,
+      url_imagen,
+      precio,
+    } = req.body;
     const result = await productsModel.actualizarProducto(
       id_producto,
       titulo,
@@ -80,8 +88,8 @@ const updateProduct = async (req, res) => {
 // DELETE producto
 const deleteProduct = async (req, res) => {
   try {
-    const { id_producto } = req.params;
-    const result = await productsModel.borrarProducto(id_producto);
+    const { id } = req.params;
+    const result = await productsModel.borrarProducto(id);
     if (!result.length) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
@@ -90,44 +98,44 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar producto" });
   }
 };
-
-// GET verificar si usuario dio like a producto
-const getUserLikeProduct = async (req, res) => {
+// GET favoritos del usuario
+const getLikesDelUser = async (req, res) => {
   try {
-    const { id_producto } = req.params;
-    const result = await productsModel.getUserLikeProductModel(req.user.id, id_producto);
-    res.status(200).json({ liked: result.length > 0 }); // ✅ corregido
+    const id_usuario = req.user.id;
+    const result = await productsModel.getLikesDelUserModel(id_usuario);
+    res.json(result);
   } catch (err) {
-    res.status(500).json({ error: "Error al verificar like" });
+    console.error("Error en getLikesDelUser:", err);
+    res.status(500).json({ error: "Error al obtener favoritos" });
   }
 };
 
-// POST agregar like
+
+// POST: agregar like
 const addLike = async (req, res) => {
   try {
-    const { id_producto } = req.body;
-    const result = await productsModel.addLikeModel(req.user.id, id_producto);
+    const id_usuario = req.user.id; // ✅ usuario desde token
+    const id_producto = req.params.id; // ✅ producto desde URL
+    const result = await productsModel.addLikeModel(id_usuario, id_producto);
     res.status(201).json(result);
   } catch (err) {
+    console.error("Error en addLike:", err);
     res.status(500).json({ error: "Error al agregar like" });
   }
 };
 
-// DELETE quitar like
+// DELETE: quitar like
 const removeLike = async (req, res) => {
   try {
-    const { id_producto } = req.params;
-    const result = await productsModel.removeLikeModel(req.user.id, id_producto);
-    if (!result) {
-      return res.status(404).json({ error: "Like no encontrado" });
-    }
-    res.status(204).send();
+    const id_usuario = req.user.id;
+    const id_producto = req.params.id;
+    const result = await productsModel.removeLikeModel(id_usuario, id_producto);
+    res.json(result);
   } catch (err) {
+    console.error("Error en removeLike:", err);
     res.status(500).json({ error: "Error al eliminar like" });
   }
 };
-
-
 // GET todas las reseñas (admin)
 const admin_getAllResenas = async (req, res) => {
   try {
@@ -141,8 +149,8 @@ const admin_getAllResenas = async (req, res) => {
 // GET reseñas de un producto
 const getResenaProduct = async (req, res) => {
   try {
-    const { id_producto } = req.params;
-    const result = await productsModel.getResenaProductModel(id_producto);
+    const {id} = req.params ;
+    const result = await productsModel.getResenaProductModel(id);
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: "Error al obtener reseñas del producto" });
@@ -152,10 +160,12 @@ const getResenaProduct = async (req, res) => {
 // POST agregar reseña
 const addResena = async (req, res) => {
   try {
-    const { id_producto, resena, calificacion } = req.body;
+    const { id } = req.params;
+    const { comentario, calificacion } = req.body;
     const result = await productsModel.addResenaModel(
-      id_producto,
-      resena,
+      id,
+      req.user.id,
+      comentario,
       calificacion
     );
     res.status(201).json(result);
@@ -167,10 +177,13 @@ const addResena = async (req, res) => {
 // PUT actualizar reseña
 const updateResena = async (req, res) => {
   try {
-    const { id_resena, resena, calificacion } = req.body;
+    const { id } = req.params;
+    const { comentario, calificacion } = req.body;
+    const id_usuario = req.user.id;
     const result = await productsModel.updateResenaModel(
-      id_resena,
-      resena,
+      id,
+      id_usuario,
+      comentario,
       calificacion
     );
     if (!result.length) {
@@ -185,8 +198,8 @@ const updateResena = async (req, res) => {
 // DELETE reseña
 const deleteResena = async (req, res) => {
   try {
-    const { id_resena } = req.params;
-    const result = await productsModel.deleteResenaModel(id_resena);
+    const { id } = req.params;
+    const result = await productsModel.deleteResenaModel(id, req.user.id);
     if (!result.length) {
       return res.status(404).json({ error: "Reseña no encontrada" });
     }
@@ -202,7 +215,7 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  getUserLikeProduct,
+  getLikesDelUser,
   addLike,
   removeLike,
   admin_getAllResenas,

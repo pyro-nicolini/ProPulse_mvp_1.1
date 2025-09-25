@@ -5,7 +5,6 @@ const { reqAuth, reqAdmin } = require("../middlewares/auth&admin.js");
 
 /**Carrito & items_detalle anidados */
 router.get("/carritos/me", reqAuth, cartsController.getCart);
-router.post("/carritos/me", reqAuth, cartsController.createCart);
 
 /** Manejo de items, cantidades, lógica */
 router.put("/carritos/detalle", reqAuth, cartsController.addItemCart);
@@ -16,7 +15,8 @@ router.delete("/carritos/detalle", reqAuth, cartsController.deleteItemCart);
 router.get("/carritos/me/total", reqAuth, cartsController.getTotalCart);
 
 /** confirma carrito, copia a Pedido  */
-router.post("/carritos/checkout", reqAuth, cartsController.checkOutCart);
+router.post("/pedidos/checkout", reqAuth, cartsController.checkOutCart);
+router.get("/pedidos/me", reqAuth, cartsController.getUserOrders);
 
 router.delete(  "/carritos/admin",  reqAuth,  reqAdmin,  cartsController.admin_deleteCart);
 router.put("/pedidos/admin", reqAdmin, cartsController.admin_updateOrder);

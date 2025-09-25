@@ -11,51 +11,53 @@ const pool = require("../db/conection");
 const obtenerCarrito = async (id_usuario) => {
   try {
     const obtenerCarro = `
-    SELECT * FROM carritos 
-    WHERE id_usuario = $1 AND estado = 'abierto'
-    LIMIT 1;
+      SELECT * FROM carritos
+      WHERE id_usuario = $1 AND estado = 'abierto'
+      LIMIT 1;
     `;
     const { rows } = await pool.query(obtenerCarro, [id_usuario]);
-    const carro = rows;
-    if (carro) {
-      const id_carrito = carro[0].id_carrito;
-      // Traer detalles
-      const obtenerItem = await pool.query(
-        `SELECT d.id_item, d.id_carrito, p.id_producto, d.precio_fijo, d.cantidad, d.subtotal, p.titulo, p.descripcion, p.stock, p.tipo, p.url_imagen FROM carritos_detalle d LEFT JOIN productos p ON d.id_producto = p.id_producto WHERE d.id_carrito = $1;`,
-        [id_carrito]
-      );
-      carro[0].items_carrito = obtenerItem.rows;
-      // Totales
-      const total = await pool.query(
-        `SELECT 
-        COALESCE(SUM(subtotal), 0) AS sub_total,
-        COALESCE(SUM(subtotal), 0) * 0.19 AS impuestos,
-        COALESCE(SUM(subtotal), 0) * 1.19 AS total_carrito
-        FROM carritos_detalle
-        WHERE id_carrito = $1;`,
-        [id_carrito]
-      );
-      carro[0].total = total.rows[0];
-      return carro[0];
-    }
+
+    if (rows.length === 0) return null; // No hay carrito abierto
+
+    const carro = rows[0];
+
+    // Traer detalles
+    const obtenerItem = await pool.query(
+      `
+      SELECT 
+        d.id_item, d.id_carrito, d.id_producto, d.precio_fijo, d.cantidad, d.subtotal,
+        p.titulo, p.descripcion, p.stock, p.tipo, p.url_imagen
+      FROM carritos_detalle d
+      LEFT JOIN productos p ON d.id_producto = p.id_producto
+      WHERE d.id_carrito = $1;
+      `,
+      [carro.id_carrito]
+    );
+
+    carro.items_carrito = obtenerItem.rows;
+
+    // Totales
+    const total = await pool.query(
+      `
+      SELECT 
+        COALESCE(SUM(d.subtotal), 0) AS sub_total,
+        COALESCE(SUM(d.subtotal), 0) * 0.19 AS impuestos,
+        COALESCE(SUM(d.subtotal), 0) * 1.19 AS total_carrito
+      FROM carritos_detalle d
+      WHERE d.id_carrito = $1;
+      `,
+      [carro.id_carrito]
+    );
+
+    carro.total = total.rows[0];
+
+    return carro;
   } catch (error) {
     throw { code: 500, message: "Error al obtener carrito" };
   }
 };
-// si no existe, crear uno nuevo
-const crearCarrito = async (id_usuario) => {
-  try {
-    const crearCarro = `
-      INSERT INTO carritos (id_usuario, estado)
-      VALUES ($1, 'abierto')
-      RETURNING *;
-      `;
-    const { rows: nuevo } = await pool.query(crearCarro, [id_usuario]);
-    return nuevo[0];
-  } catch (error) {
-    throw { code: 500, message: "Error al crear carrito" };
-  }
-};
+
+
 
 // AGREGA UN PRODUCTO AL CARRITO (UNIQUE lanzara ERROR para evitar duplicados en el carro en schema)
 // (ON CONCLICT)  se salta el ERROR y lanza DO UPDATE...
@@ -147,6 +149,7 @@ const obtenerTotalCarrito = async (id_carrito) => {
 
 // CERRAR CARRITO Y ABRIR PEDIDO
 const confirmarCarrito = async (id_usuario) => {
+  // Buscar carrito abierto
   const carritoDelUser = `
     SELECT * FROM carritos 
     WHERE estado = 'abierto' AND id_usuario = $1;
@@ -159,21 +162,19 @@ const confirmarCarrito = async (id_usuario) => {
 
   // Crear pedido
   const crearPedido = `
-    INSERT INTO pedidos (id_usuario, estado, total_pedido) 
-VALUES (
-  $1,                                    
-  'pendiente',                           
-  (SELECT COALESCE(SUM(subtotal), 0)    
-   FROM carritos_detalle 
-   WHERE id_carrito = $2)             
-)
-RETURNING *;
-
+    INSERT INTO pedidos (id_usuario, total_pedido) 
+    VALUES (
+      $1,
+      (SELECT COALESCE(SUM(subtotal), 0)    
+       FROM carritos_detalle 
+       WHERE id_carrito = $2)
+    )
+    RETURNING *;
   `;
   const nuevoPedido = await pool.query(crearPedido, [id_usuario, id_carrito]);
   const { id_pedido } = nuevoPedido.rows[0];
 
-  // Copiar detalles
+  // Copiar detalles a pedidos_detalle
   const copiandoItems = `
     INSERT INTO pedidos_detalle (id_pedido, id_producto, precio_fijo, cantidad, subtotal)
     SELECT $1, id_producto, precio_fijo, cantidad, subtotal
@@ -182,7 +183,7 @@ RETURNING *;
   `;
   await pool.query(copiandoItems, [id_pedido, id_carrito]);
 
-  // Cerrar carrito
+  // Cerrar carrito usado
   const cerrandoCarrito = `
     UPDATE carritos
     SET estado = 'cerrado'
@@ -190,8 +191,62 @@ RETURNING *;
     RETURNING *;
   `;
   const cerrarCarro = await pool.query(cerrandoCarrito, [id_carrito]);
-  return cerrarCarro.rows[0];
+
+  // Abrir un nuevo carrito vacío
+  const nuevoCarrito = `
+    INSERT INTO carritos (id_usuario, estado)
+    VALUES ($1, 'abierto')
+    RETURNING *;
+  `;
+  const carritoAbierto = await pool.query(nuevoCarrito, [id_usuario]);
+
+  return {
+    pedido: nuevoPedido.rows[0],
+    // carrito_cerrado: cerrarCarro.rows[0],  // POR SI QUIERO DEVOLVERLO O DEBUGGEAR 
+    // nuevo_carrito: carritoAbierto.rows[0], // POR SI QUIERO DEVOLVERLO O DEBUGGEAR 
+  };
 };
+
+const obtenerPedidosUsuario = async (id_usuario) => {
+  const query = `
+    SELECT p.*
+    FROM pedidos p
+    WHERE p.id_usuario = $1
+    ORDER BY p.fecha_creacion DESC;
+  `;
+  const pedidosResult = await pool.query(query, [id_usuario]);
+  const pedidos = pedidosResult.rows;
+
+  if (pedidos.length === 0) {
+    return [];
+  }
+
+  // Por cada pedido, traer sus items
+  const pedidosConItems = [];
+  for (const pedido of pedidos) {
+    const detalleQuery = `
+      SELECT pd.id_detalle,
+             pd.id_producto,
+             pr.titulo,
+             pr.url_imagen,
+             pd.cantidad,
+             pd.precio_fijo,
+             pd.subtotal
+      FROM pedidos_detalle pd
+      INNER JOIN productos pr ON pd.id_producto = pr.id_producto
+      WHERE pd.id_pedido = $1;
+    `;
+    const detalleResult = await pool.query(detalleQuery, [pedido.id_pedido]);
+
+    pedidosConItems.push({
+      ...pedido,
+      items_pedido: detalleResult.rows
+    });
+  }
+
+  return pedidosConItems;
+};
+
 
 // BORRAR CARRITO ABIERTO (ADMIN)
 const Admin_BorrarCarrito = async (id_usuario) => {
@@ -225,7 +280,6 @@ const Admin_ObtenerTodosPedidos = async () => {
 
 module.exports = {
   obtenerCarrito,
-  crearCarrito,
 
   agregarItemCarrito,
   disminuirItemCarrito,
@@ -234,6 +288,7 @@ module.exports = {
   obtenerTotalCarrito,
 
   confirmarCarrito,
+  obtenerPedidosUsuario,
 
   Admin_actualizarEstadoPedido,
   Admin_BorrarCarrito,

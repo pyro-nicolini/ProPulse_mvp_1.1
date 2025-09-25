@@ -22,15 +22,17 @@ const getCart = async (req, res) => {
     res.status(err.code || 500).json({ error: "Error al obtener cart" });
   }
 };
-const createCart = async (req, res) => {
-  try {
-    const miCarrito = await cartsModel.crearCarrito(req.user.id);
-    res.status(201).send(miCarrito);
-  } catch (err) {
-    console.error("Error en createCart:", err);
-    res.status(err.code || 500).json({ error: "Error al crear cart" });
-  }
-};
+
+// FUNCION CREAR CARRITO SE INTEGRO AL CREAR USUARIO.
+// const createCart = async (req, res) => {
+//   try {
+//     const miCarrito = await cartsModel.crearCarrito(req.user.id);
+//     res.status(201).send(miCarrito);
+//   } catch (err) {
+//     console.error("Error en createCart:", err);
+//     res.status(err.code || 500).json({ error: "Error al crear cart" });
+//   }
+// };
 
 const addItemCart = async (req, res) => {
   const { id_carrito, id_producto } = req.body;
@@ -61,9 +63,13 @@ const getTotalCart = async (req, res) => {
 };
 
 const checkOutCart = async (req, res) => {
-  const { id } = req.body;
-  const result = await cartsModel.confirmarCarrito(id);
+  const result = await cartsModel.confirmarCarrito(req.user.id);
   res.status(201).send(result);
+};
+
+const getUserOrders = async (req, res) => {
+  const result = await cartsModel.obtenerPedidosUsuario(req.user.id);
+  res.status(200).json(result);
 };
 
 const admin_updateOrder = async (req, res) => {
@@ -88,7 +94,6 @@ const admin_getAllOrders = async (req, res) => {
 
 module.exports = {
   getCart,
-  createCart,
 
   addItemCart,
   removeItemCart,
@@ -97,6 +102,8 @@ module.exports = {
   getTotalCart,
 
   checkOutCart,
+  getUserOrders,
+
   admin_deleteCart,
 
   admin_updateOrder,

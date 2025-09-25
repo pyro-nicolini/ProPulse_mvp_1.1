@@ -58,7 +58,7 @@ UNIQUE (id_carrito, id_producto)
 CREATE TABLE IF NOT EXISTS pedidos (
 id_pedido SERIAL PRIMARY KEY,
 id_usuario INT NOT NULL REFERENCES usuarios(id),
-estado VARCHAR(25) NOT NULL DEFAULT 'abierto' CHECK (estado IN('abierto','cerrado')),
+estado VARCHAR(25) NOT NULL DEFAULT 'pendiente' CHECK (estado IN('pendiente','pagado','enviado','entregado','cancelado')),
 fecha_creacion TIMESTAMP NOT NULL DEFAULT NOW(),
 total_pedido NUMERIC (12,0) NOT NULL CHECK (total_pedido >=0)
 );

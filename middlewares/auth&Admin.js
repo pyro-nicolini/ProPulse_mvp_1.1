@@ -5,6 +5,7 @@ const ultraSecreto = process.env.JWT_SECRET || "az_AZ";
 LA AUTENTICACION Y AUTORIZACION SE REPETIA EN VARIOS CONTROLLERS, ASI QUE
 SE EXTRAE A UN MIDDLEWARE PARA REUTILIZARLO
 
+
 */
 function reqAuth(req, res, next) {
   const Authorization = req.header("Authorization");

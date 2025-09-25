@@ -46,7 +46,15 @@ const actualizarProducto = async (
   url_imagen,
   precio
 ) => {
-  const values = [titulo, descripcion, stock, tipo, url_imagen, precio, id_producto];
+  const values = [
+    titulo,
+    descripcion,
+    stock,
+    tipo,
+    url_imagen,
+    precio,
+    id_producto,
+  ];
   const query = `
     UPDATE productos 
     SET titulo = $1, descripcion = $2, stock = $3, tipo = $4, url_imagen = $5, precio = $6 
@@ -58,11 +66,18 @@ const actualizarProducto = async (
 };
 
 // --- FAVORITOS ---
-async function getUserLikeProductModel(id_usuario, id_producto) {
-  const result = await pool.query(
-    `SELECT * FROM favoritos WHERE id_usuario = $1 AND id_producto = $2`,
-    [id_usuario, id_producto]
-  );
+// models/productsModel.js
+async function getLikesDelUserModel(id_usuario) {
+  const query = `
+    SELECT f.id_producto,
+           p.titulo,
+           p.url_imagen,
+           p.likes_count
+    FROM favoritos f
+    INNER JOIN productos p ON f.id_producto = p.id_producto
+    WHERE f.id_usuario = $1;
+  `;
+  const result = await pool.query(query, [id_usuario]);
   return result.rows;
 }
 
@@ -78,7 +93,7 @@ async function addLikeModel(id_usuario, id_producto) {
     await pool.query(
       `UPDATE productos
        SET likes_count = likes_count + 1
-       WHERE id_producto = $1`,
+       WHERE id_producto = $1`, 
       [id_producto]
     );
   }
@@ -104,7 +119,6 @@ async function removeLikeModel(id_usuario, id_producto) {
 
   return { success: true, id_producto };
 }
-
 // --- RESEÑAS ---
 const getAllResenasModel = async () => {
   const query = `SELECT * FROM resenas;`;
@@ -118,11 +132,11 @@ const getResenaProductModel = async (id_producto) => {
   return result.rows;
 };
 
-const addResenaModel = async (id_producto, resena, calificacion) => {
-  const values = [id_producto, resena, calificacion];
+const addResenaModel = async (id_producto, id_usuario, comentario, calificacion) => {
+  const values = [id_producto, id_usuario, comentario, calificacion];
   const query = `
-    INSERT INTO resenas (id_producto, resena, calificacion) 
-    VALUES ($1, $2, $3) 
+    INSERT INTO resenas (id_producto, id_usuario, comentario, calificacion) 
+    VALUES ($1, $2, $3, $4) 
     RETURNING *;
   `;
   const result = await pool.query(query, values);
@@ -130,25 +144,25 @@ const addResenaModel = async (id_producto, resena, calificacion) => {
 };
 
 // Aquí mejor usar id_resena para identificar reseñas individuales
-const updateResenaModel = async (id_resena, resena, calificacion) => {
-  const values = [resena, calificacion, id_resena];
+const updateResenaModel = async (id_producto,id_usuario, comentario, calificacion) => {
+  const values = [id_producto, id_usuario, comentario, calificacion];
   const query = `
     UPDATE resenas 
-    SET resena = $1, calificacion = $2 
-    WHERE id_resena = $3 
+    SET comentario = $3, calificacion = $4 
+    WHERE id_producto = $1 AND id_usuario = $2
     RETURNING *;
   `;
   const result = await pool.query(query, values);
   return result.rows;
 };
 
-const deleteResenaModel = async (id_resena) => {
+const deleteResenaModel = async (id_producto, id_usuario) => {
   const query = `
     DELETE FROM resenas 
-    WHERE id_resena = $1 
+    WHERE id_producto = $1 AND WHERE id_usuario = $2
     RETURNING *;
   `;
-  const result = await pool.query(query, [id_resena]);
+  const result = await pool.query(query, [id_producto, id_usuario]);
   return result.rows;
 };
 
@@ -158,7 +172,7 @@ module.exports = {
   crearProducto,
   actualizarProducto,
   borrarProducto,
-  getUserLikeProductModel,
+  getLikesDelUserModel,
   addLikeModel,
   removeLikeModel,
   getAllResenasModel,
