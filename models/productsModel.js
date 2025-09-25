@@ -159,8 +159,7 @@ const updateResenaModel = async (id_producto,id_usuario, comentario, calificacio
 const deleteResenaModel = async (id_producto, id_usuario) => {
   const query = `
     DELETE FROM resenas 
-    WHERE id_producto = $1 AND WHERE id_usuario = $2
-    RETURNING *;
+    WHERE id_producto = $1 AND id_usuario = $2 RETURNING *;
   `;
   const result = await pool.query(query, [id_producto, id_usuario]);
   return result.rows;

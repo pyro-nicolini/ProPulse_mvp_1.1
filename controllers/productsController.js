@@ -199,10 +199,8 @@ const updateResena = async (req, res) => {
 const deleteResena = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await productsModel.deleteResenaModel(id, req.user.id);
-    if (!result.length) {
-      return res.status(404).json({ error: "Reseña no encontrada" });
-    }
+    const id_usuario = req.user.id;
+    const result = await productsModel.deleteResenaModel(id, id_usuario);
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ error: "Error al eliminar reseña" });
