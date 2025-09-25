@@ -4,9 +4,9 @@ const productsController = require("../controllers/productsController.js");
 const { reqAuth, reqAdmin } = require("../middlewares/auth&admin.js");
 
 /* --- LIKES (deben ir ANTES que :id) --- */
-router.get("/productos/likes", reqAuth, productsController.getLikesDelUser);
-router.post("/productos/likes/:id", reqAuth, productsController.addLike);
-router.delete("/productos/likes/:id", reqAuth, productsController.removeLike);
+router.get("/likes", reqAuth, productsController.getLikesDelUser);
+router.post("/likes/:id", reqAuth, productsController.addLike);
+router.delete("/likes/:id", reqAuth, productsController.removeLike);
 
 /* --- CRUD ADMIN PRODUCTOS --- */
 router.post("/productos/admin", reqAuth, reqAdmin, productsController.createProduct);

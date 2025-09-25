@@ -187,7 +187,7 @@ const updateResena = async (req, res) => {
       calificacion
     );
     if (!result.length) {
-      return res.status(404).json({ error: "Reseña no encontrada" });
+      return res.status(404).json({ error: "Update: Reseña no encontrada" });
     }
     res.status(200).json(result);
   } catch (err) {
