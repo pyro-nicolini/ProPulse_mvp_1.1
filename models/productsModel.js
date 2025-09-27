@@ -1,6 +1,5 @@
 const pool = require("../db/conection");
 
-// --- PRODUCTOS ---
 const obtenerProductos = async () => {
   const query = `SELECT * FROM productos`;
   const result = await pool.query(query);
@@ -65,8 +64,6 @@ const actualizarProducto = async (
   return result.rows;
 };
 
-// --- FAVORITOS ---
-// models/productsModel.js
 async function getLikesDelUserModel(id_usuario) {
   const query = `
     SELECT f.id_producto,
@@ -143,7 +140,6 @@ const addResenaModel = async (id_producto, id_usuario, comentario, calificacion)
   return result.rows;
 };
 
-// Aquí mejor usar id_resena para identificar reseñas individuales
 const updateResenaModel = async (id_producto,id_usuario, comentario, calificacion) => {
   const values = [id_producto, id_usuario, comentario, calificacion];
   const query = `

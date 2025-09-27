@@ -13,9 +13,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     console.log("🚀 Iniciando tests de PropulseAPI...");
   });
 
-  // ============================================
   // TEST 1: REGISTRO DE USUARIO
-  // ============================================
   describe("1. AUTENTICACIÓN - Registro de Usuario", () => {
     it("Debe registrar un nuevo usuario correctamente (201)", async () => {
       const userData = {
@@ -46,9 +44,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 2: LOGIN Y AUTENTICACIÓN
-  // ============================================
   describe("2. AUTENTICACIÓN - Login de Usuario", () => {
     it("Debe permitir login con credenciales válidas (200)", async () => {
       const loginData = {
@@ -77,9 +73,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 3: PERFIL DE USUARIO
-  // ============================================
   describe("3. PERFIL - Datos del Usuario", () => {
     it("Debe obtener datos del usuario autenticado (200)", async () => {
       const res = await request(app)
@@ -100,9 +94,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 4: PRODUCTOS
-  // ============================================
   describe("4. PRODUCTOS - Listado y Detalle", () => {
     it("Debe obtener lista de productos (200)", async () => {
       const res = await request(app).get("/productos");
@@ -130,9 +122,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 5: SISTEMA DE LIKES
-  // ============================================
   describe("5. INTERACCIONES - Likes", () => {
     it("Debe permitir dar like a un producto (200/201)", async () => {
       if (productId) {
@@ -167,9 +157,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 6: CARRITO
-  // ============================================
   describe("6. CARRITO - Gestión", () => {
     it("Debe obtener carrito del usuario (200)", async () => {
       const res = await request(app)
@@ -203,9 +191,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 7: CHECKOUT
-  // ============================================
   describe("7. PEDIDOS - Checkout", () => {
     it("Debe permitir checkout del carrito (200/201/400)", async () => {
       const res = await request(app)
@@ -234,9 +220,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 8: RESEÑAS
-  // ============================================
   describe("8. RESEÑAS", () => {
     it("Debe permitir agregar reseña válida (200/201)", async () => {
       if (productId) {
@@ -273,9 +257,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 9: ADMIN
-  // ============================================
   describe("9. ADMIN - Gestión de Productos", () => {
     it("Debe permitir crear un producto como admin (200/201)", async () => {
       // Suponemos que ya tienes un admin creado y su token en tu DB
@@ -303,9 +285,7 @@ describe("PROPULSE API - Test Suite Completo", () => {
     });
   });
 
-  // ============================================
   // TEST 10: GENERAL
-  // ============================================
   describe("10. API GENERAL", () => {
     it("Debe devolver información general de la API (200)", async () => {
       const res = await request(app).get("/");

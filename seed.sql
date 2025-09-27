@@ -8,7 +8,6 @@ INSERT INTO usuarios (nombre, email, password) VALUES
 
 
 INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo, url_imagen, destacado, activo, precio) VALUES
--- 15 PRODUCTOS (stock=15)
 (1,'Whey Protein Isolate 2 lb','Proteína de suero aislada para ganancia de masa magra.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/4/4b/Whey_powder.jpg',true,true,36990),
 (1,'Caseína Micelar 2 lb','Proteína de liberación lenta, ideal para la noche.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/2/20/Orgain_organic_protein_powder.jpg',false,true,34990),
 (1,'Creatina Monohidratada 300 g','Mejora fuerza y rendimiento; monohidrato micronizado.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Protein_Powder_in_a_Blender_Bottle_%2844547157820%29.jpg/1280px-Protein_Powder_in_a_Blender_Bottle_%2844547157820%29.jpg',true,true,16990),
@@ -25,7 +24,6 @@ INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo, url_imagen, d
 (1,'Banco Ajustable Comercial','Banco multiposición para press e inclinados.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/7c/Dumbells_and_free_weights_in_a_gym.jpg',false,true,129990),
 (1,'Rack para Mancuernas 2 Niveles','Soporte robusto para organizar mancuernas.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/7c/Dumbells_and_free_weights_in_a_gym.jpg',true,true,159990),
 
--- 15 SERVICIOS (stock=NULL)
 (1,'Plan Nutricional Personalizado (4 semanas)','Diseñado para hipertrofia y recomposición corporal.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',false,true,39990),
 (1,'Entrenamiento Personal 1 a 1 (8 sesiones)','Sesiones individualizadas para objetivos de fuerza.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',true,true,159990),
 (1,'Asesoría Online de Entrenamiento (Zoom)','Programa y seguimiento semanal a distancia.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',false,true,34990),
