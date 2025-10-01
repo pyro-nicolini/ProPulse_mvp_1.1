@@ -12,3 +12,8 @@ const pool = new Pool({
 
 
 module.exports = pool;
+
+
+// Para la facilidad del ejercicio entre compañeros utilizamos esta configuración. 
+
+// Sabemos que nunca se deben incluir estos datos sensibles en un proyecto real y utilizar la variable de entorno.

@@ -18,8 +18,8 @@ function reqAuth(req, res, next) {
   try {
     const token = Authorization.split("Bearer ")[1];
     const payload = jwt.verify(token, ultraSecreto);
-    req.user = payload; // SE CREA OBJETO USER con el payload del token  👈
-    // ahora cualquier controller puede usar req.user.id, req.user.rol, etc
+    req.user = payload; // 👈👈👈👈👈 SE CREA OBJETO USER con el payload del token
+    // ahora cualquier controller puede usar req.user.id, req.user.rol, etc.
     next();
   } catch (err) {
     return res.status(401).json({ error: "Token inválido o expirado" });
