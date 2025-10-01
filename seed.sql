@@ -7,35 +7,127 @@ INSERT INTO usuarios (nombre, email, password) VALUES
 ('cliente','cliente@cliente.com', '$2b$10$uy6iwIOExIrCMQ4QBuT5au48lm9H7BNCzCUzB4E7.B/NZqwpCdaBS');
 
 
-INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo, url_imagen, destacado, activo, precio) VALUES
-(1,'Whey Protein Isolate 2 lb','Proteína de suero aislada para ganancia de masa magra.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/4/4b/Whey_powder.jpg',true,true,36990),
-(1,'Caseína Micelar 2 lb','Proteína de liberación lenta, ideal para la noche.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/2/20/Orgain_organic_protein_powder.jpg',false,true,34990),
-(1,'Creatina Monohidratada 300 g','Mejora fuerza y rendimiento; monohidrato micronizado.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Protein_Powder_in_a_Blender_Bottle_%2844547157820%29.jpg/1280px-Protein_Powder_in_a_Blender_Bottle_%2844547157820%29.jpg',true,true,16990),
-(1,'BCAA 2:1:1 300 g','Aminoácidos de cadena ramificada para recuperación muscular.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/4/4b/Whey_powder.jpg',false,true,14990),
-(1,'Pre-Entreno Ultra Pump','Fórmula con citrulina y cafeína para energía y bombeo.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Protein_Powder_in_a_Blender_Bottle_%2844547157820%29.jpg/1280px-Protein_Powder_in_a_Blender_Bottle_%2844547157820%29.jpg',true,true,19990),
-(1,'Beta-Alanina 200 g','Ayuda a bufferar el ácido láctico y retrasar la fatiga.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/4/4b/Whey_powder.jpg',false,true,12990),
-(1,'Shaker Pro 700 ml','Botella mezcladora para batidos y suplementos.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/1/1b/Osaka_protein_shaker.jpg',true,true,5990),
-(1,'Mancuernas Hexagonales Par 2×10 kg','Par de mancuernas de goma para entrenamientos de fuerza.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/9/9c/Dumbbells_In_Workout.jpg',false,true,89990),
-(1,'Mancuernas Ajustables 2×24 kg','Mancuernas con selector de peso para alto rendimiento.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/7c/Dumbells_and_free_weights_in_a_gym.jpg',true,true,299990),
-(1,'Barra Olímpica 20 kg','Barra estándar olímpica para powerlifting y halterofilia.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/7a/Olympic_barbell.jpg',false,true,109990),
-(1,'Discos Bumper Set 150 kg','Juego de discos de caucho para levantamientos técnicos.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',true,true,399990),
-(1,'Kettlebell Competición 16 kg','Kettlebell para swings, cleans y snatches.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/74/8kg_kettlebell.jpg',false,true,39990),
-(1,'Power Rack 2.5×2 m','Jaula de potencia para sentadilla, press y dominadas.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/9/9f/Power_Rack.JPG',true,true,499990),
-(1,'Banco Ajustable Comercial','Banco multiposición para press e inclinados.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/7c/Dumbells_and_free_weights_in_a_gym.jpg',false,true,129990),
-(1,'Rack para Mancuernas 2 Niveles','Soporte robusto para organizar mancuernas.',15,'producto','https://upload.wikimedia.org/wikipedia/commons/7/7c/Dumbells_and_free_weights_in_a_gym.jpg',true,true,159990),
+INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo, 
+url_imagen, url_imagen2, url_imagen3, url_imagen4, destacado, activo, precio) VALUES
+(1,'Mancuernas Hexagonales 2×10 kg','Par de mancuernas de goma antideslizante.',15,'producto',
+'producto1_1.webp','producto1_2.webp','producto1_3.webp','producto1_4.webp',true,true,89990),
 
-(1,'Plan Nutricional Personalizado (4 semanas)','Diseñado para hipertrofia y recomposición corporal.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',false,true,39990),
-(1,'Entrenamiento Personal 1 a 1 (8 sesiones)','Sesiones individualizadas para objetivos de fuerza.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',true,true,159990),
-(1,'Asesoría Online de Entrenamiento (Zoom)','Programa y seguimiento semanal a distancia.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',false,true,34990),
-(1,'Evaluación de Composición Corporal','Mediciones y plan de acción inicial.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',true,true,19990),
-(1,'Taller Técnica Sentadilla y Peso Muerto (2 h)','Correcciones, seguridad y progresiones.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/6/67/Dead_Lift.jpg',false,true,29990),
-(1,'Clases HIIT Grupal (8 clases)','Condicionamiento metabólico de alta intensidad.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',true,true,49990),
-(1,'Taller de Movilidad y Flexibilidad (2 h)','Enfoque en caderas, hombros y columna.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',false,true,29990),
-(1,'Programa Hipertrofia (12 semanas + seguimiento)','Rutinas por bloques, sobrecarga progresiva.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',true,true,179990),
-(1,'Plan Recuperación Post-Entreno','Sesión guiada de descarga y cuidados.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',false,true,24990),
-(1,'Taller de Alimentación para Ganancia Muscular','Macros, timing y compras inteligentes.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',true,true,24990),
-(1,'Entrenamiento Grupal de Fuerza (8 sesiones)','Técnica, seguridad y progresiones en grupo.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',false,true,79990),
-(1,'Coaching de Hábitos y Sueño (4 sesiones)','Rutinas, descanso y adherencia de largo plazo.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',true,true,49990),
-(1,'Plan de Rutina Full Body (1 mes)','Programa 3×/semana + progresión de cargas.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/4/45/Personal_trainer_assessing_a_client%27s_goals_and_needs_as_they_write_a_fitness_programme.jpg',false,true,29990),
-(1,'Taller de Core y Estabilidad (2 h)','Fortalecimiento de zona media y prevención.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/28/Men_lifting_heavy_weights.jpg',true,true,29990),
-(1,'Asesoría de Suplementación Deportiva','Plan de uso de proteínas, creatina y pre-entreno.',NULL,'servicio','https://upload.wikimedia.org/wikipedia/commons/2/20/Orgain_organic_protein_powder.jpg',false,true,19990);
+(1,'Mancuernas Ajustables 2×24 kg','Sistema de ajuste rápido de peso.',15,'producto',
+'producto2_1.webp','producto2_2.webp','producto2_3.webp','producto2_4.webp',true,true,299990),
+
+(1,'Barra Olímpica 20 kg','Barra para powerlifting y halterofilia.',15,'producto',
+'producto3_1.webp','producto3_2.webp','producto3_3.webp','producto3_4.webp',false,true,109990),
+
+(1,'Discos Bumper 150 kg','Juego completo de discos de caucho.',12,'producto',
+'producto4_1.webp','producto4_2.webp','producto4_3.webp','producto4_4.webp',true,true,399990),
+
+(1,'Kettlebell Competición 24 kg','Kettlebell profesional para cross-training.',20,'producto',
+'producto5_1.webp','producto5_2.webp','producto5_3.webp','producto5_4.webp',false,true,59990),
+
+(1,'Power Rack 2.5×2 m','Jaula de potencia multifuncional.',10,'producto',
+'producto6_1.webp','producto6_2.webp','producto6_3.webp','producto6_4.webp',true,true,499990),
+
+(1,'Banco Ajustable Comercial','Banco multiposición de acero reforzado.',15,'producto',
+'producto7_1.webp','producto7_2.webp','producto7_3.webp','producto7_4.webp',false,true,129990),
+
+(1,'Rack para Mancuernas 3 Niveles','Soporte para 12 pares de mancuernas.',8,'producto',
+'producto8_1.webp','producto8_2.webp','producto8_3.webp','producto8_4.webp',true,true,159990),
+
+(1,'Máquina Polea Dual','Poleas ajustables para múltiples ejercicios.',7,'producto',
+'producto9_1.webp','producto9_2.webp','producto9_3.webp','producto9_4.webp',true,true,799990),
+
+(1,'Prensa de Piernas 45°','Máquina profesional para tren inferior.',5,'producto',
+'producto10_1.webp','producto10_2.webp','producto10_3.webp','producto10_4.webp',true,true,999990),
+
+(1,'Cuerda de Batalla 12 m','Battle rope de uso intensivo.',20,'producto',
+'producto11_1.webp','producto11_2.webp','producto11_3.webp','producto11_4.webp',false,true,59990),
+
+(1,'Balón Medicinal 10 kg','Balón de caucho sólido para lanzamientos.',25,'producto',
+'producto12_1.webp','producto12_2.webp','producto12_3.webp','producto12_4.webp',false,true,34990),
+
+(1,'Esterilla Antideslizante 10 mm','Colchoneta premium para entrenamientos.',30,'producto',
+'producto13_1.webp','producto13_2.webp','producto13_3.webp','producto13_4.webp',true,true,19990),
+
+(1,'Máquina Remo Sentado','Equipo con polea baja para dorsal y espalda.',6,'producto',
+'producto14_1.webp','producto14_2.webp','producto14_3.webp','producto14_4.webp',true,true,849990),
+
+(1,'Soga para Escalada 5 m','Cuerda de escalada para fuerza de agarre.',15,'producto',
+'producto15_1.webp','producto15_2.webp','producto15_3.webp','producto15_4.webp',false,true,44990),
+
+(1,'Paralelas de Fondo','Barras para dips y calistenia.',20,'producto',
+'producto16_1.webp','producto16_2.webp','producto16_3.webp','producto16_4.webp',true,true,79990),
+
+(1,'Máquina Smith','Estructura guiada para levantamientos seguros.',5,'producto',
+'producto17_1.webp','producto17_2.webp','producto17_3.webp','producto17_4.webp',true,true,899990),
+
+(1,'Soga de Velocidad','Cuerda ligera para entrenamiento cardiovascular.',35,'producto',
+'producto18_1.webp','producto18_2.webp','producto18_3.webp','producto18_4.webp',false,true,9990),
+
+(1,'TRX Pro Kit','Sistema de suspensión para entrenamiento funcional.',15,'producto',
+'producto19_1.webp','producto19_2.webp','producto19_3.webp','producto19_4.webp',true,true,59990),
+
+(1,'Máquina Peck Deck','Equipo para pectorales y deltoides.',5,'producto',
+'producto20_1.webp','producto20_2.webp','producto20_3.webp','producto20_4.webp',true,true,759990);
+
+
+INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo,
+url_imagen, url_imagen2, url_imagen3, url_imagen4, destacado, activo, precio) VALUES
+(1,'Instalación de Power Rack','Montaje, nivelación y anclaje de jaula de potencia.',NULL,'servicio',
+'servicio1_1.webp','servicio1_2.webp','servicio1_3.webp','servicio1_4.webp',true,true,119990),
+
+(1,'Mantenimiento Preventivo de Máquinas','Ajuste, limpieza y lubricación de equipos de fuerza y cardio.',NULL,'servicio',
+'servicio2_1.webp','servicio2_2.webp','servicio2_3.webp','servicio2_4.webp',true,true,89990),
+
+(1,'Armado de Home Gym','Planificación del espacio y montaje de equipo básico.',NULL,'servicio',
+'servicio3_1.webp','servicio3_2.webp','servicio3_3.webp','servicio3_4.webp',true,true,159990),
+
+(1,'Coaching Personal 1:1 (60 min)','Sesión personalizada de fuerza/hipertrofia.',NULL,'servicio',
+'servicio4_1.webp','servicio4_2.webp','servicio4_3.webp','servicio4_4.webp',false,true,34990),
+
+(1,'Plan Nutricional Deportivo','Plan personalizado orientado a rendimiento y composición.',NULL,'servicio',
+'servicio5_1.webp','servicio5_2.webp','servicio5_3.webp','servicio5_4.webp',false,true,39990),
+
+(1,'Evaluación Física y Test de Fuerza','Mediciones, RM estimada y movilidad base.',NULL,'servicio',
+'servicio6_1.webp','servicio6_2.webp','servicio6_3.webp','servicio6_4.webp',false,true,29990),
+
+(1,'Clínica de Powerlifting (3 h)','Técnica de sentadilla, banca y peso muerto.',NULL,'servicio',
+'servicio7_1.webp','servicio7_2.webp','servicio7_3.webp','servicio7_4.webp',true,true,89990),
+
+(1,'Taller de Halterofilia (3 h)','Arranque y envión: progresiones y seguridad.',NULL,'servicio',
+'servicio8_1.webp','servicio8_2.webp','servicio8_3.webp','servicio8_4.webp',true,true,99990),
+
+(1,'Entrenamiento Funcional Grupal (hasta 10)','Circuitos full-body con implementos.',NULL,'servicio',
+'servicio9_1.webp','servicio9_2.webp','servicio9_3.webp','servicio9_4.webp',false,true,69990),
+
+(1,'Mobility & Stretching (60 min)','Sesión guiada para movilidad y descarga.',NULL,'servicio',
+'servicio10_1.webp','servicio10_2.webp','servicio10_3.webp','servicio10_4.webp',false,true,24990),
+
+(1,'Programación de Entrenamiento (4 sem)','Plan escrito con progresiones y seguimiento.',NULL,'servicio',
+'servicio11_1.webp','servicio11_2.webp','servicio11_3.webp','servicio11_4.webp',true,true,44990),
+
+(1,'Traslado y Montaje de Equipos','Retiro, transporte y reinstalación segura.',NULL,'servicio',
+'servicio12_1.webp','servicio12_2.webp','servicio12_3.webp','servicio12_4.webp',false,true,129990),
+
+(1,'Ajuste y Lubricación de Máquinas','Elimina ruidos, calibra cables y guías.',NULL,'servicio',
+'servicio13_1.webp','servicio13_2.webp','servicio13_3.webp','servicio13_4.webp',false,true,49990),
+
+(1,'Clínica de Kettlebells (2 h)','Técnica segura de swing, clean y press.',NULL,'servicio',
+'servicio14_1.webp','servicio14_2.webp','servicio14_3.webp','servicio14_4.webp',false,true,54990),
+
+(1,'Recuperación con Foam Roller (45 min)','Liberación miofascial guiada.',NULL,'servicio',
+'servicio15_1.webp','servicio15_2.webp','servicio15_3.webp','servicio15_4.webp',false,true,19990),
+
+(1,'HIIT Corporativo On-Site (60 min)','Clase intensa para equipos de empresa.',NULL,'servicio',
+'servicio16_1.webp','servicio16_2.webp','servicio16_3.webp','servicio16_4.webp',true,true,119990),
+
+(1,'Arriendo Jaula+Barra+Discos (por día)','Set completo para eventos o sesiones puntuales.',NULL,'servicio',
+'servicio17_1.webp','servicio17_2.webp','servicio17_3.webp','servicio17_4.webp',true,true,149990),
+
+(1,'Workshop Ergonomía en Oficina','Prevención de lesiones y pausas activas.',NULL,'servicio',
+'servicio18_1.webp','servicio18_2.webp','servicio18_3.webp','servicio18_4.webp',false,true,99990),
+
+(1,'Armado y Anclaje de Barra Dominadas','Instalación en muro/techo con refuerzos.',NULL,'servicio',
+'servicio19_1.webp','servicio19_2.webp','servicio19_3.webp','servicio19_4.webp',false,true,69990),
+
+(1,'Sanitización de Equipos','Desinfección profunda grado profesional.',NULL,'servicio',
+'servicio20_1.webp','servicio20_2.webp','servicio20_3.webp','servicio20_4.webp',false,true,39990);
