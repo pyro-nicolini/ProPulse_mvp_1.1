@@ -29,7 +29,22 @@ const getUser = async (req, res) => {
 // Registrar nuevo usuario
 const registerUser = async (req, res) => {
   try {
+    // Verificar que req.body existe
+    if (!req.body) {
+      return res
+        .status(400)
+        .json({ error: "Cuerpo de la solicitud requerido" });
+    }
+
     const { nombre, email, password } = req.body;
+
+    // Validar que todos los campos requeridos estén presentes
+    if (!nombre || !email || !password) {
+      return res
+        .status(400)
+        .json({ error: "nombre, email y password son obligatorios" });
+    }
+
     const nuevoUsuario = await usersModel.crearUsuario({
       nombre,
       email,
@@ -49,10 +64,16 @@ const registerUser = async (req, res) => {
 const jwt = require("jsonwebtoken");
 const ultraSecreto = process.env.JWT_SECRET || "az_AZ";
 
-
 // Login de usuario y generación de JWT
 const loginUser = async (req, res) => {
   try {
+    // Verificar que req.body existe
+    if (!req.body) {
+      return res
+        .status(400)
+        .json({ error: "Cuerpo de la solicitud requerido" });
+    }
+
     const { email, password } = req.body;
     if (!email || !password) {
       return res

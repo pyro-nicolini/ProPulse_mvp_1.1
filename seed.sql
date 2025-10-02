@@ -132,90 +132,106 @@ url_imagen, url_imagen2, url_imagen3, url_imagen4, destacado, activo, precio) VA
 (1,'Sanitización de Equipos','Desinfección profunda grado profesional.',NULL,'servicio',
 'servicio20_1.webp','servicio20_2.webp','servicio20_3.webp','servicio20_4.webp',false,true,39990);
 
-
 INSERT INTO productos (
   id_admin, titulo, descripcion, stock, tipo, categoria,
   url_imagen, url_imagen2, destacado, activo, precio
 ) VALUES
 (1,
 'Gold Standard 100% Whey Protein (5 Lb) - Original',
-'Gold Standard® 100% Whey de Optimum Nutrition, contiene una mezcla de proteína aislada de suero, proteína de suero concentrada y proteína de suero hidrolizada que aporta 24 gramos de proteína por porción. Además, aporta naturalmente 5,5 g de aminoácidos ramificados. Fórmula que aporta una buena fuente de calcio y bajo aporte de sodio por porción de consumo.',
-20,
-'producto',
-'suplementos','producto21_1.webp','producto21_2.webp',true,true,90990),
+'Mezcla de proteína aislada, concentrada e hidrolizada de suero, con 24 g de proteína y 5,5 g de BCAA por porción. Fuente de calcio y bajo en sodio.',
+20,'producto','suplementos','producto21_1.webp','producto21_2.webp',true,true,90990),
 
 
-(1,'Prostar Whey, Whey Protein (5 Lb) - Original','Prostar Whey es una mezcla de concentrado y aislado de proteína de suero de leche, con una elevada concentración de aminoácidos, los que contribuirán a la protección, recuperación y reconstrucción de las fibras musculares después de la práctica deportiva. Aporta 25g de proteína, 5g de carbohidratos y sólo 1g de grasa por porción.',20,'producto',
-'suplementos','producto22_1.webp','producto22_2.webp',true,true,70540),
+(1,'Prostar Whey, Whey Protein (5 Lb) - Original',
+'Proteína de suero con 25 g de proteína, 5 g de carbohidratos y 1 g de grasa por porción. Favorece recuperación y protección muscular.',
+20,'producto','suplementos','producto22_1.webp','producto22_2.webp',true,true,70540),
 
 
-(1,'Whey Pro Win (4,4 lb)','Su alto contenido de proteínas y aminoácidos, proporcionan energía al músculo en actividades físicas tanto aeróbicas, como anaeróbicas. También contribuyen a cubrir posibles déficits proteicos en la ingesta diaria. Fomentando de esta manera el anabolismo muscular (recuperación, desarrollo, crecimiento). Y previniendo el catabolismo muscular (pérdida, reducción, degradación).',20,'producto',
-'suplementos','producto23_1.webp','producto23_2.webp',true,true,87520),
+(1,'Whey Pro Win (4,4 lb)',
+'Suplemento con alto contenido de proteínas y aminoácidos para energía, recuperación y desarrollo muscular, evitando el catabolismo.',
+20,'producto','suplementos','producto23_1.webp','producto23_2.webp',true,true,87520),
 
 
-(1,'Nutrex creatina monohidratada 400gr','La creatina Nutrex monohidratada de 400gr es un suplemento de máxima pureza formulado para optimizar tu rendimiento deportivo. Cada porción proporciona 5 gramos de creatina monohidratada de calidad premium, diseñada para aumentar significativamente la fuerza, potencia muscular y resistencia durante los entrenamientos intensos. La creatina Nutrex de 400gr es altamente soluble y de rápida absorción, garantizando que tu cuerpo reciba eficazmente los beneficios energéticos necesarios para maximizar resultados físicos. Esta creatina es la opción perfecta para deportistas que buscan mejorar de manera segura y efectiva su desempeño y recuperación muscular',20,'producto',
-'suplementos','producto24_1.webp','producto24_2.webp',true,true,22740),
+(1,'Nutrex creatina monohidratada 400gr',
+'Creatina pura de rápida absorción, 5 g por porción. Mejora fuerza, potencia, resistencia y recuperación en entrenamientos intensos.',
+20,'producto','suplementos','producto24_1.webp','producto24_2.webp',true,true,22740),
 
 
-(1,'Ultimate Nutrition creatina monohidratada 300gr','La creatina Ultimate Nutrition de 300 gr es una opción premium diseñada específicamente para mejorar tu rendimiento deportivo mediante una fórmula avanzada de creatina monohidratada. Esta creatina utiliza tecnología biovolumizing, incrementando eficazmente el volumen celular, lo que optimiza la fuerza, resistencia y recuperación muscular tras esfuerzos intensos. La creatina monohidratada Ultimate Nutrition de 300gr se destaca por ser micronizada, garantizando una disolución rápida y una absorción inmediata, proporcionando resultados visibles desde las primeras semanas de uso. Ideal para atletas que buscan maximizar su desempeño y lograr un crecimiento muscular sostenido y eficiente.',20,'producto',
-'suplementos','producto25_1.webp','producto25_2.webp',true,true,20990),
+(1,'Ultimate Nutrition creatina monohidratada 300gr',
+'Creatina micronizada para mejor absorción. Aumenta volumen celular, fuerza y recuperación muscular. Resultados desde las primeras semanas.',
+20,'producto','suplementos','producto25_1.webp','producto25_2.webp',true,true,20990),
 
 
-(1,'Optimum Nutrition creatina powder 300gr','La creatina Optimum Nutrition de 300gr es un suplemento diseñado para potenciar tu rendimiento físico y ayudarte a alcanzar tus objetivos deportivos. Formulada con creatina monohidratada, este producto en formato powder ofrece una absorción eficiente y una mezcla instantánea, ideal para tu rutina diaria. Cada porción contiene 5 g de creatina monohidratada marca Optimum Nutrition de 300 gr, un compuesto que favorece la regeneración del ATP (Adenosín Trifosfato), la principal fuente de energía utilizada por los músculos durante esfuerzos intensos. Esto se traduce en mayor fuerza, potencia y recuperación muscular tras el entrenamiento. Perfecta para deportistas que buscan mejorar su rendimiento, incrementar masa muscular y acelerar su progreso de forma segura y eficaz.',20,'producto',
-'suplementos','producto26_1.webp','producto26_2.webp',true,true,35990),
+(1,'Optimum Nutrition creatina powder 300gr',
+'Creatina monohidratada en polvo de alta pureza. Regenera ATP, incrementa fuerza, potencia y recuperación muscular.',
+20,'producto','suplementos','producto26_1.webp','producto26_2.webp',true,true,35990),
 
 
-(1,'LIPO 6 INTENSE ULTRA CONCENTRATE 60 CAPSULES, NUTREX','Lipo 6 Intense Ultra Concentrate de Nutrex es un alimento para deportistas con adición de cafeína aportada por el extracto de té verde y cafeína anhidra, entregando 351 mg por porción. Es suplementado con vitamina D, vitamina B6, vitamina B12, Cromo y Yodo. Todos los ingredientes activos de esta fórmula son permitidos por la reglamentación Chilena.',20,'producto',
-'suplementos','producto27_1.webp','producto27_2.webp',true,true,22950),
+(1,'LIPO 6 INTENSE ULTRA CONCENTRATE 60 CAPSULES, NUTREX',
+'Termogénico con cafeína, té verde, vitamina D, B6, B12, cromo y yodo. Aporta energía y apoyo metabólico.',
+20,'producto','suplementos','producto27_1.webp','producto27_2.webp',true,true,22950),
 
 
-(1,'Caffeine 200, Energía (60 caps) - Original','Lipo-6 caffeine es un suplemento que te aporta energía de forma rápida para aumentar tu capacidad física y mental antes, durante y después de tus entrenamientos. También puede ser consumido en cualquier momento del día cuando necesites energía extra y una máxima concentración. Cada cápsula contiene 210 mg de cafeína..',20,'producto',
-'suplementos','producto28_1.webp','producto28_2.webp',true,true,19990),
+(1,'Caffeine 200, Energía (60 caps) - Original',
+'Cápsulas de cafeína (210 mg cada una) para energía rápida y concentración durante entrenamientos o el día.',
+20,'producto','suplementos','producto28_1.webp','producto28_2.webp',true,true,19990),
 
 
-(1,'KREATOR BLUE AGGRESSION 600 GRS','Pre entreno KREATOR es un potente activador y pre-entreno, diseñado para personas que entrenan a alta intensidad.',20,'producto',
-'suplementos','producto29_1.webp','producto29_2.webp',true,true,34990),
+(1,'KREATOR BLUE AGGRESSION 600 GRS',
+'Potente pre-entreno diseñado para mejorar energía, fuerza y rendimiento en sesiones de alta intensidad.',
+20,'producto','suplementos','producto29_1.webp','producto29_2.webp',true,true,34990),
 
 
-(1,'Solgar L-glutamina 60 tabletas','Solgar glutamina es un suplemento diseñado para proteger la masa muscular en momentos de estrés físico, entrenamientos intensos o recuperación tras enfermedad. Gracias a su formato en tabletas, permite una dosificación precisa y cómoda para quienes desean mantener su masa magra, reducir el dolor muscular y favorecer la reconstrucción de los tejidos.',20,'producto',
-'suplementos','producto30_1.webp','producto30_2.webp',true,true,24990),
+(1,'Solgar L-glutamina 60 tabletas',
+'Glutamina en tabletas para apoyar la recuperación muscular, reducir dolor y conservar masa magra.',
+20,'producto','suplementos','producto30_1.webp','producto30_2.webp',true,true,24990),
 
 
-(1,'Optimun Nutrition glutamina Glutamine Powder 300 gr','La glutamina Optimum Nutrition es una excelente alternativa para proteger y recuperar tu masa muscular después de entrenamientos intensos o en periodos de alta exigencia física. Este suplemento ayuda a reducir el dolor muscular, acelera la recuperación y reconstruye los tejidos musculares dañados por el esfuerzo.',20,'producto',
-'suplementos','producto31_1.webp','producto31_2.webp',true,true,34990),
+(1,'Optimun Nutrition glutamina Glutamine Powder 300 gr',
+'Glutamina en polvo que acelera recuperación, reconstruye tejidos musculares y disminuye el dolor tras entrenamientos intensos.',
+20,'producto','suplementos','producto31_1.webp','producto31_2.webp',true,true,34990),
 
 
-(1,'Glutamine Drive (300 gr) - Original','El suplemento L-Glutamina ayuda a mantener altos niveles de glutamina muscular, lo que a su vez acelera la reparación y el crecimiento del tejido muscular. El consumo diario de L-Glutamina ayuda a maximizar los resultados de la construcción muscular. GLUTAMINE DRIVE contiene L-Glutamina pura, es sin sabor y se puede agregar fácilmente a cualquier bebida de su elección. Agregar una cucharada de GLUTAMINE DRIVE a su bebida o comida después del entrenamiento mejorará enormemente la reparación muscular y estimulará un crecimiento más rápido del tejido muscular.',20,'producto',
-'suplementos','producto32_1.webp','producto32_2.webp',true,true,32990),
+(1,'Glutamine Drive (300 gr) - Original',
+'L-Glutamina pura sin sabor. Favorece reparación muscular y crecimiento, ideal post-entrenamiento.',
+20,'producto','suplementos','producto32_1.webp','producto32_2.webp',true,true,32990),
 
 
-(1,'E-Amino 2200, Aminoácidos (120 soft) - Original','E AMINO 2200, contiene una exclusiva formulación en base a 18 aminoácidos esenciales y no esenciales + L- Carnitina. Los aminoácidos son el elemento esencial de las proteínas y se utilizan para potenciar el desarrollo y favorecer la reparación muscular. Cuatro softgels de E-Amino 2200 contienen 2.200 mg de aminoácidos esenciales y no esenciales derivados del caseinato de calcio, de fácil absorción a nivel intestinal permitiendo una óptima utilización y un aumento significativo de la capacidad funcional del músculo.',20,'producto',
-'suplementos','producto33_1.webp','producto33_2.webp',true,true,26990),
+(1,'E-Amino 2200, Aminoácidos (120 soft) - Original',
+'Fórmula con 18 aminoácidos y L-carnitina. 2.200 mg por porción para potenciar desarrollo y recuperación muscular.',
+20,'producto','suplementos','producto33_1.webp','producto33_2.webp',true,true,26990),
 
 
-(1,'Amino 2222, Aminoácidos (320 Tabs) - Original','Los aminoácidos son las estructuras que conforman las proteínas, por lo tanto son fundamentales para la regeneración y reconstitución muscular. AMINO 2222 es una mezcla de aminoácidos esenciales y no esenciales especialmente diseñado para mantener constante el nivel de aminoácidos en el organismo y así favorecer la recuperación muscular dañada o desgastada producto de la práctica deportiva o estilo de vida actual. Amino 2222 es ideal además para ser utilizado por hombres y mujeres en períodos de dieta que quieran evitar la pérdida de masa muscular.',20,'producto',
-'suplementos','producto34_1.webp','producto34_2.webp',true,true,50990),
+(1,'Amino 2222, Aminoácidos (320 Tabs) - Original',
+'Mezcla de aminoácidos esenciales y no esenciales para mantener niveles constantes y favorecer recuperación muscular.',
+20,'producto','suplementos','producto34_1.webp','producto34_2.webp',true,true,50990),
 
 
-(1,'Aminoxine Plus, Aminoácidos (60 caps)','Los aminoácidos, en combinación con zinc, son fundamentales para la síntesis de proteínas necesarias para el metabolismo. Algunas de ellas participan directamente en la síntesis del colágeno y queratina, componentes fundamentales de la piel, el cabello y las uñas, así como otras estructuras de sostén como tendones y cartílagos. Producto fabricado con certificación GMP',20,'producto',
-'suplementos','producto35_1.webp','producto35_2.webp',true,true,14990),
+(1,'Aminoxine Plus, Aminoácidos (60 caps)',
+'Aminoácidos con zinc que apoyan la síntesis de proteínas, colágeno y queratina. Fabricado con certificación GMP.',
+20,'producto','suplementos','producto35_1.webp','producto35_2.webp',true,true,14990),
 
 
-(1,'Amino 2002, Aminoácidos (100 Tabs) - Original','Los aminoácidos son las estructuras que conforman las proteínas, por lo tanto son fundamentales para la regeneración y reconstitución muscular. AMINO 2002 es una mezcla de aminoácidos esenciales y no esenciales especialmente diseñado para mantener constante el nivel de aminoácidos en el organismo y así favorecer la recuperación muscular dañada o desgastada producto de la práctica deportiva o estilo de vida actual. Amino 2002 es ideal además para ser usado por hombres y mujeres en períodos de dieta que quieran evitar la pérdida de masa muscular.',20,'producto',
-'suplementos','producto36_1.webp','producto36_2.webp',true,true,29990),
+(1,'Amino 2002, Aminoácidos (100 Tabs) - Original',
+'Fórmula de aminoácidos esenciales y no esenciales que ayuda a conservar masa muscular durante entrenamientos o dietas.',
+20,'producto','suplementos','producto36_1.webp','producto36_2.webp',true,true,29990),
 
 
-(1,'Quest, Barra proteica (60 gr)','QUEST BAR es una exquisita barra que aporta desde 20 g a 21 g de proteína de alta calidad por porción, procedentes de proteína de leche aislada y proteína de suero aislada. Además proporciona una excelente fuente de fibra dietética y calcio.',20,'producto',
-'suplementos','producto37_1.webp','producto37_2.webp',true,true,3670),
+(1,'Quest, Barra proteica (60 gr)',
+'Barra con 20-21 g de proteína de alta calidad, rica en fibra y calcio. Ideal como snack proteico.',
+20,'producto','suplementos','producto37_1.webp','producto37_2.webp',true,true,3670),
 
 
-(1,'Twenty´s, Snack proteico (60 gr)','Las barras Twentys son ideales para quienes buscan incorporar proteína a su dieta, con snacks de buen perfil nutricional. También para personas que buscan mantener o bajar de peso.',20,'producto',
-'suplementos','producto38_1.webp','producto38_2.webp',true,true,3090),
+(1,'Twentys', Snack proteico (60 gr)',
+'Barra nutritiva con proteína y buen perfil nutricional, ideal para mantener o bajar de peso.',
+20,'producto','suplementos','producto38_1.webp','producto38_2.webp',true,true,3090),
 
 
-(1,'Wild Protein, barra proteica, Chocolate Maní (45 gr)','Barra de proteínas con una textura crocante. Hecha de proteína de soya orgánica y de suero de leche. Dentro de los ingredientes que le entregan el buen sabor está mantequilla de maní natural, chocolate sin azúcar y dátiles.',20,'producto',
-'suplementos','producto39_1.webp','producto39_2.webp',true,true,1890),
+(1,'Wild Protein, barra proteica, Chocolate Maní (45 gr)',
+'Barra crocante con proteína de soya y suero de leche, más chocolate sin azúcar y dátiles.',
+20,'producto','suplementos','producto39_1.webp','producto39_2.webp',true,true,1890),
 
 
-(1,'BARRA PROTEICA PROTEIN BITE, YGOAL','Protein Bite Black & White, es una exquisita barra de tres capas: deliciosa barra de chocolate dulce, capa de caramelo y bañada en una irresistible capa de chocolate blanco con crispis de chocolate. Su perfil nutricional es perfecto para quienes realizan actividad física.',20,'producto',
-'suplementos','producto40_1.webp','producto40_2.webp',true,true,2790);
+(1,'BARRA PROTEICA PROTEIN BITE, YGOAL',
+'Barra en tres capas: chocolate, caramelo y cobertura de chocolate blanco con crispis. Excelente perfil nutricional.',
+20,'producto','suplementos','producto40_1.webp','producto40_2.webp',true,true,2790);

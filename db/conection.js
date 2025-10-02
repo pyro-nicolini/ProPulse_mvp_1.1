@@ -7,9 +7,9 @@ const pool = new Pool({
   host: 'localhost',
   database: 'propulse',
   port: 5432,
-  allowExitOnIdle: true
-})
-
+  allowExitOnIdle: true,
+  client_encoding: 'UTF8'
+});
 
 module.exports = pool;
 

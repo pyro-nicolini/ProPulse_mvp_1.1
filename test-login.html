@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Login ProPulse</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      #resultado {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+      }
+      .success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 Test de Login - ProPulse API</h1>
+
+    <h2>Registro de Usuario</h2>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="regNombre">Nombre:</label>
+        <input type="text" id="regNombre" value="Usuario Test" required />
+      </div>
+      <div class="form-group">
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" value="test@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="regPassword">Password:</label>
+        <input type="password" id="regPassword" value="123456" required />
+      </div>
+      <button type="submit">Registrar Usuario</button>
+    </form>
+
+    <h2>Login de Usuario</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" value="test@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" value="123456" required />
+      </div>
+      <button type="submit">Iniciar Sesión</button>
+    </form>
+
+    <h2>Información de Usuario (con token)</h2>
+    <button id="getUserInfo">Obtener Info Usuario</button>
+
+    <div id="resultado"></div>
+
+    <script>
+      const API_BASE = "http://localhost:3000";
+      let currentToken = null;
+
+      // Función para mostrar resultados
+      function mostrarResultado(mensaje, esExito = true) {
+        const resultado = document.getElementById("resultado");
+        resultado.textContent = mensaje;
+        resultado.className = esExito ? "success" : "error";
+      }
+
+      // Registro de usuario
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const datos = {
+            nombre: document.getElementById("regNombre").value,
+            email: document.getElementById("regEmail").value,
+            password: document.getElementById("regPassword").value,
+          };
+
+          try {
+            const response = await fetch(`${API_BASE}/auth/register`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(datos),
+            });
+
+            const resultado = await response.text();
+            let resultadoJson;
+            try {
+              resultadoJson = JSON.parse(resultado);
+            } catch (e) {
+              resultadoJson = { message: resultado };
+            }
+
+            mostrarResultado(
+              `REGISTRO - Status: ${response.status}\n${JSON.stringify(
+                resultadoJson,
+                null,
+                2
+              )}`,
+              response.ok
+            );
+          } catch (error) {
+            mostrarResultado(`Error en registro: ${error.message}`, false);
+          }
+        });
+
+      // Login de usuario
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const datos = {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+          };
+
+          console.log("Enviando datos de login:", datos);
+
+          try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(datos),
+            });
+
+            const resultado = await response.text();
+            let resultadoJson;
+            try {
+              resultadoJson = JSON.parse(resultado);
+            } catch (e) {
+              resultadoJson = { message: resultado };
+            }
+
+            if (response.ok && resultadoJson.token) {
+              currentToken = resultadoJson.token;
+              mostrarResultado(
+                `LOGIN EXITOSO - Status: ${
+                  response.status
+                }\nToken obtenido: ${currentToken.substring(
+                  0,
+                  20
+                )}...\n${JSON.stringify(resultadoJson, null, 2)}`,
+                true
+              );
+            } else {
+              mostrarResultado(
+                `LOGIN FALLIDO - Status: ${response.status}\n${JSON.stringify(
+                  resultadoJson,
+                  null,
+                  2
+                )}`,
+                false
+              );
+            }
+          } catch (error) {
+            mostrarResultado(`Error en login: ${error.message}`, false);
+          }
+        });
+
+      // Obtener información del usuario
+      document
+        .getElementById("getUserInfo")
+        .addEventListener("click", async () => {
+          if (!currentToken) {
+            mostrarResultado(
+              "Error: Primero debes hacer login para obtener un token",
+              false
+            );
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_BASE}/auth/me`, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${currentToken}`,
+                "Content-Type": "application/json",
+              },
+            });
+
+            const resultado = await response.text();
+            let resultadoJson;
+            try {
+              resultadoJson = JSON.parse(resultado);
+            } catch (e) {
+              resultadoJson = { message: resultado };
+            }
+
+            mostrarResultado(
+              `INFO USUARIO - Status: ${response.status}\n${JSON.stringify(
+                resultadoJson,
+                null,
+                2
+              )}`,
+              response.ok
+            );
+          } catch (error) {
+            mostrarResultado(`Error al obtener info: ${error.message}`, false);
+          }
+        });
+    </script>
+  </body>
+</html>

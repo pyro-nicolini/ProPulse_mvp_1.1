@@ -1,4 +1,8 @@
 \c postgres;
+
+\encoding UTF8
+SET CLIENT_ENCODING TO 'UTF8';
+
 drop database propulse;
 
 CREATE DATABASE propulse;
