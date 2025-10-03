@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ProPulse API – Docs Rápidas</title>
+    <title>ProPulse API – Docs</title>
     <style>
       :root {
         --bg: #0f172a;
@@ -69,6 +69,34 @@
     </header>
 
     <main>
+
+            <!-- COMMON -->
+
+      <div class="card">
+        <h2>Encabezados comunes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Header</th>
+              <th>Valor</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Content-Type</code></td>
+              <td><code>application/json</code></td>
+              <td class="note">En POST/PUT</td>
+            </tr>
+            <tr>
+              <td><code>Authorization</code></td>
+              <td><code>Bearer &lt;token&gt;</code></td>
+              <td class="note">Requerido en endpoints protegidos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <!-- AUTH -->
       <div class="card">
         <h2>1) Autenticación <span class="pill AUTH">AUTH</span></h2>
