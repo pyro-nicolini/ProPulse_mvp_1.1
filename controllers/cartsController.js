@@ -83,12 +83,12 @@ const admin_updateOrder = async (req, res) => {
 
 const admin_deleteCart = async (req, res) => {
   const { id } = req.body;
-  const result = await cartsModel.admin_BorrarCarrito(id);
+  const result = await cartsModel.admin_borrarCarrito(id);
   res.status(201).send(result);
 };
 
 const admin_getAllOrders = async (req, res) => {
-  const result = await cartsModel.admin_ObtenerTodosPedidos();
+  const result = await cartsModel.admin_obtenerTodosPedidos();
   res.status(201).send(result);
 };
 

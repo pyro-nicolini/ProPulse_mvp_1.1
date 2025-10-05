@@ -57,8 +57,6 @@ const obtenerCarrito = async (id_usuario) => {
   }
 };
 
-
-
 // AGREGA UN PRODUCTO AL CARRITO (UNIQUE lanzara ERROR para evitar duplicados en el carro en schema)
 // (ON CONCLICT)  se salta el ERROR y lanza DO UPDATE...
 // actualizando la cantidad.
@@ -149,62 +147,105 @@ const obtenerTotalCarrito = async (id_carrito) => {
 
 // CERRAR CARRITO Y ABRIR PEDIDO
 const confirmarCarrito = async (id_usuario) => {
-  // Buscar carrito abierto
-  const carritoDelUser = `
-    SELECT * FROM carritos 
-    WHERE estado = 'abierto' AND id_usuario = $1;
-  `;
-  const copiandoCarrito = await pool.query(carritoDelUser, [id_usuario]);
-  if (copiandoCarrito.rows.length === 0) {
-    throw { code: 400, message: "No hay carrito abierto para este usuario" };
+  const client = await pool.connect(); // Usar transacción para atomicidad
+
+  try {
+    await client.query("BEGIN");
+
+    // Buscar carrito abierto
+    const carritoDelUser = `
+      SELECT * FROM carritos 
+      WHERE estado = 'abierto' AND id_usuario = $1;
+    `;
+    const copiandoCarrito = await client.query(carritoDelUser, [id_usuario]);
+    if (copiandoCarrito.rows.length === 0) {
+      throw { code: 400, message: "No hay carrito abierto para este usuario" };
+    }
+    const { id_carrito } = copiandoCarrito.rows[0];
+
+    // Verificar stock disponible antes de procesar
+    const verificarStock = `
+      SELECT cd.id_producto, cd.cantidad, p.stock, p.titulo
+      FROM carritos_detalle cd
+      INNER JOIN productos p ON cd.id_producto = p.id_producto
+      WHERE cd.id_carrito = $1;
+    `;
+    const stockCheck = await client.query(verificarStock, [id_carrito]);
+
+    // Validar que hay suficiente stock para todos los productos
+    for (const item of stockCheck.rows) {
+      if (item.cantidad > item.stock) {
+        throw {
+          code: 400,
+          message: `Stock insuficiente para ${item.titulo}. Disponible: ${item.stock}, Solicitado: ${item.cantidad}`,
+        };
+      }
+    }
+
+    // Crear pedido
+    const crearPedido = `
+      INSERT INTO pedidos (id_usuario, total_pedido) 
+      VALUES (
+        $1,
+        (SELECT COALESCE(SUM(subtotal), 0)    
+         FROM carritos_detalle 
+         WHERE id_carrito = $2)
+      )
+      RETURNING *;
+    `;
+    const nuevoPedido = await client.query(crearPedido, [
+      id_usuario,
+      id_carrito,
+    ]);
+    const { id_pedido } = nuevoPedido.rows[0];
+
+    // Copiar detalles a pedidos_detalle
+    const copiandoItems = `
+      INSERT INTO pedidos_detalle (id_pedido, id_producto, precio_fijo, cantidad, subtotal)
+      SELECT $1, id_producto, precio_fijo, cantidad, subtotal
+      FROM carritos_detalle
+      WHERE id_carrito = $2;
+    `;
+    await client.query(copiandoItems, [id_pedido, id_carrito]);
+
+    // ⭐ NUEVO: Restar stock de los productos
+    const restarStock = `
+      UPDATE productos 
+      SET stock = stock - cd.cantidad
+      FROM carritos_detalle cd
+      WHERE productos.id_producto = cd.id_producto 
+      AND cd.id_carrito = $1;
+    `;
+    await client.query(restarStock, [id_carrito]);
+
+    // Cerrar carrito usado
+    const cerrandoCarrito = `
+      UPDATE carritos
+      SET estado = 'cerrado'
+      WHERE id_carrito = $1 AND estado = 'abierto'
+      RETURNING *;
+    `;
+    const cerrarCarro = await client.query(cerrandoCarrito, [id_carrito]);
+
+    // Abrir un nuevo carrito vacío
+    const nuevoCarrito = `
+      INSERT INTO carritos (id_usuario, estado)
+      VALUES ($1, 'abierto')
+      RETURNING *;
+    `;
+    const carritoAbierto = await client.query(nuevoCarrito, [id_usuario]);
+
+    await client.query("COMMIT");
+
+    return {
+      pedido: nuevoPedido.rows[0],
+    };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
   }
-  const { id_carrito } = copiandoCarrito.rows[0];
-
-  // Crear pedido
-  const crearPedido = `
-    INSERT INTO pedidos (id_usuario, total_pedido) 
-    VALUES (
-      $1,
-      (SELECT COALESCE(SUM(subtotal), 0)    
-       FROM carritos_detalle 
-       WHERE id_carrito = $2)
-    )
-    RETURNING *;
-  `;
-  const nuevoPedido = await pool.query(crearPedido, [id_usuario, id_carrito]);
-  const { id_pedido } = nuevoPedido.rows[0];
-
-  // Copiar detalles a pedidos_detalle
-  const copiandoItems = `
-    INSERT INTO pedidos_detalle (id_pedido, id_producto, precio_fijo, cantidad, subtotal)
-    SELECT $1, id_producto, precio_fijo, cantidad, subtotal
-    FROM carritos_detalle
-    WHERE id_carrito = $2;
-  `;
-  await pool.query(copiandoItems, [id_pedido, id_carrito]);
-
-  // Cerrar carrito usado
-  const cerrandoCarrito = `
-    UPDATE carritos
-    SET estado = 'cerrado'
-    WHERE id_carrito = $1 AND estado = 'abierto'
-    RETURNING *;
-  `;
-  const cerrarCarro = await pool.query(cerrandoCarrito, [id_carrito]);
-
-  // Abrir un nuevo carrito vacío
-  const nuevoCarrito = `
-    INSERT INTO carritos (id_usuario, estado)
-    VALUES ($1, 'abierto')
-    RETURNING *;
-  `;
-  const carritoAbierto = await pool.query(nuevoCarrito, [id_usuario]);
-
-  return {
-    pedido: nuevoPedido.rows[0],
-    // carrito_cerrado: cerrarCarro.rows[0],  // POR SI QUIERO DEVOLVERLO O DEBUGGEAR 
-    // nuevo_carrito: carritoAbierto.rows[0], // POR SI QUIERO DEVOLVERLO O DEBUGGEAR 
-  };
 };
 
 const obtenerPedidosUsuario = async (id_usuario) => {
@@ -240,16 +281,15 @@ const obtenerPedidosUsuario = async (id_usuario) => {
 
     pedidosConItems.push({
       ...pedido,
-      items_pedido: detalleResult.rows
+      items_pedido: detalleResult.rows,
     });
   }
 
   return pedidosConItems;
 };
 
-
 // BORRAR CARRITO ABIERTO (ADMIN)
-const Admin_BorrarCarrito = async (id_usuario) => {
+const admin_borrarCarrito = async (id_usuario) => {
   const query = `
     DELETE FROM carritos
     WHERE id_usuario = $1 AND estado = 'abierto'
@@ -260,7 +300,7 @@ const Admin_BorrarCarrito = async (id_usuario) => {
 };
 
 // ACTUALIZAR ESTADO PEDIDO (ADMIN)
-const Admin_actualizarEstadoPedido = async (id_pedido, nuevo_estado) => {
+const admin_actualizarEstadoPedido = async (id_pedido, nuevo_estado) => {
   const query = `
     UPDATE pedidos
     SET estado = $1
@@ -272,7 +312,7 @@ const Admin_actualizarEstadoPedido = async (id_pedido, nuevo_estado) => {
 };
 
 // HISTORIAL DE PEDIDOS (ADMIN)
-const Admin_ObtenerTodosPedidos = async () => {
+const admin_obtenerTodosPedidos = async () => {
   const query = `SELECT * FROM pedidos;`;
   const result = await pool.query(query);
   return result.rows;
@@ -290,7 +330,7 @@ module.exports = {
   confirmarCarrito,
   obtenerPedidosUsuario,
 
-  Admin_actualizarEstadoPedido,
-  Admin_BorrarCarrito,
-  Admin_ObtenerTodosPedidos,
+  admin_actualizarEstadoPedido,
+  admin_borrarCarrito,
+  admin_obtenerTodosPedidos,
 };
