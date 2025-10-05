@@ -1,6 +1,5 @@
 const pool = require("../db/conection");
 
-// 🛒 Obtener carrito abierto del usuario
 const obtenerCarrito = async (id_usuario) => {
   try {
     const { rows } = await pool.query(
@@ -36,7 +35,6 @@ const obtenerCarrito = async (id_usuario) => {
   }
 };
 
-// ➕ Agregar item al carrito
 const agregarItemCarrito = async (id_carrito, id_producto) => {
   const query = `
     INSERT INTO carritos_detalle (id_carrito, id_producto, precio_fijo, cantidad, subtotal)
@@ -62,7 +60,6 @@ const agregarItemCarrito = async (id_carrito, id_producto) => {
   return rows[0];
 };
 
-// ➖ Disminuir cantidad del carrito
 const disminuirItemCarrito = async (id_carrito, id_producto) => {
   const values = [id_carrito, id_producto];
   const deleted = await pool.query(
@@ -86,7 +83,6 @@ const disminuirItemCarrito = async (id_carrito, id_producto) => {
   return updated.rows[0];
 };
 
-// ❌ Eliminar producto/servicio del carrito
 const eliminarProductoDelCarrito = async (id_carrito, id_producto) => {
   const { rows } = await pool.query(
     `DELETE FROM carritos_detalle
@@ -97,7 +93,6 @@ const eliminarProductoDelCarrito = async (id_carrito, id_producto) => {
   return rows[0];
 };
 
-// 💰 Calcular total del carrito
 const obtenerTotalCarrito = async (id_carrito) => {
   const { rows } = await pool.query(
     `SELECT 
@@ -111,7 +106,6 @@ const obtenerTotalCarrito = async (id_carrito) => {
   return rows[0];
 };
 
-// ✅ Confirmar carrito → generar pedido y nuevo carrito
 const confirmarCarrito = async (id_usuario) => {
   const client = await pool.connect();
   try {
@@ -198,7 +192,6 @@ const confirmarCarrito = async (id_usuario) => {
   }
 };
 
-// 📦 Pedidos del usuario
 const obtenerPedidosUsuario = async (id_usuario) => {
   const { rows } = await pool.query(
     `SELECT * FROM pedidos
@@ -211,7 +204,7 @@ const obtenerPedidosUsuario = async (id_usuario) => {
   for (const p of rows) {
     const items = await pool.query(
       `SELECT pd.id_detalle, pd.id_producto, pr.titulo, pr.url_imagen,
-              pd.cantidad, pd.precio_fijo, pd.subtotal
+              pd.cantidad, pd.precio_fijo, pd.subtotal, pr.tipo
        FROM pedidos_detalle pd
        INNER JOIN productos pr ON pd.id_producto = pr.id_producto
        WHERE pd.id_pedido = $1;`,
@@ -222,7 +215,6 @@ const obtenerPedidosUsuario = async (id_usuario) => {
   return pedidos;
 };
 
-// 🧾 Admin: actualizar estado de pedido
 const admin_actualizarEstadoPedido = async (id_pedido, nuevo_estado) => {
   const { rows } = await pool.query(
     `UPDATE pedidos
@@ -234,7 +226,6 @@ const admin_actualizarEstadoPedido = async (id_pedido, nuevo_estado) => {
   return rows[0];
 };
 
-// 🗑️ Admin: borrar carrito abierto
 const admin_borrarCarrito = async (id_usuario) => {
   const { rows } = await pool.query(
     `DELETE FROM carritos
@@ -245,7 +236,6 @@ const admin_borrarCarrito = async (id_usuario) => {
   return rows[0];
 };
 
-// 📋 Admin: listar todos los pedidos
 const admin_obtenerTodosPedidos = async () => {
   const { rows } = await pool.query(`SELECT * FROM pedidos;`);
   return rows;

@@ -13,7 +13,6 @@ const cartsModel = require("../models/cartsModel.js");
    503 Service Unavailable → Servicio no disponible temporalmente
 */
 
-// 🛒 Obtener carrito del usuario
 const getCart = async (req, res) => {
   try {
     const carrito = await cartsModel.obtenerCarrito(req.user.id);
@@ -25,7 +24,6 @@ const getCart = async (req, res) => {
   }
 };
 
-// ➕ Agregar producto o servicio al carrito
 const addItemCart = async (req, res) => {
   try {
     const { id_carrito, id_producto } = req.body;
@@ -42,7 +40,6 @@ const addItemCart = async (req, res) => {
   }
 };
 
-// ➖ Disminuir cantidad de un ítem
 const removeItemCart = async (req, res) => {
   try {
     const { id_carrito, id_producto } = req.body;
@@ -59,7 +56,6 @@ const removeItemCart = async (req, res) => {
   }
 };
 
-// ❌ Eliminar producto/servicio del carrito
 const deleteItemCart = async (req, res) => {
   try {
     const { id_carrito, id_producto } = req.body;
@@ -76,7 +72,6 @@ const deleteItemCart = async (req, res) => {
   }
 };
 
-// 💰 Obtener totales del carrito
 const getTotalCart = async (req, res) => {
   try {
     const { id_carrito } = req.body;
@@ -93,7 +88,6 @@ const getTotalCart = async (req, res) => {
   }
 };
 
-// ✅ Confirmar carrito (crear pedido)
 const checkOutCart = async (req, res) => {
   try {
     const result = await cartsModel.confirmarCarrito(req.user.id);
@@ -108,7 +102,6 @@ const checkOutCart = async (req, res) => {
   }
 };
 
-// 📦 Obtener pedidos del usuario
 const getUserOrders = async (req, res) => {
   try {
     const result = await cartsModel.obtenerPedidosUsuario(req.user.id);
@@ -121,7 +114,6 @@ const getUserOrders = async (req, res) => {
   }
 };
 
-// 🧾 ADMIN: Actualizar estado de pedido
 const admin_updateOrder = async (req, res) => {
   try {
     const { id_pedido, nuevo_estado } = req.body;
@@ -138,7 +130,6 @@ const admin_updateOrder = async (req, res) => {
   }
 };
 
-// 🗑️ ADMIN: Eliminar carrito abierto
 const admin_deleteCart = async (req, res) => {
   try {
     const { id } = req.body;
@@ -155,7 +146,6 @@ const admin_deleteCart = async (req, res) => {
   }
 };
 
-// 📋 ADMIN: Listar todos los pedidos
 const admin_getAllOrders = async (_req, res) => {
   try {
     const result = await cartsModel.admin_obtenerTodosPedidos();
