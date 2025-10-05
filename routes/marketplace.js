@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cartsController = require("../controllers/cartsController.js");
-const { reqAuth, reqAdmin } = require("../middlewares/auth&admin.js");
+const { reqAuth, reqAdmin } = require("../middlewares/auth_Admin.js");
 
 /* Carrito & items_detalle anidados */
 router.get("/carritos/me", reqAuth, cartsController.getCart);
@@ -18,12 +18,21 @@ router.get("/carritos/me/total", reqAuth, cartsController.getTotalCart);
 router.post("/pedidos/checkout", reqAuth, cartsController.checkOutCart);
 router.get("/pedidos/me", reqAuth, cartsController.getUserOrders);
 
-router.delete(  "/carritos/admin",  reqAuth,  reqAdmin,  cartsController.admin_deleteCart);
+router.delete(
+  "/carritos/admin",
+  reqAuth,
+  reqAdmin,
+  cartsController.admin_deleteCart
+);
 router.put("/pedidos/admin", reqAdmin, cartsController.admin_updateOrder);
-router.get(  "/pedidos/admin",  reqAuth,  reqAdmin,  cartsController.admin_getAllOrders);
+router.get(
+  "/pedidos/admin",
+  reqAuth,
+  reqAdmin,
+  cartsController.admin_getAllOrders
+);
 
 module.exports = router;
 
 /** reqAuth se usa para proteger las rutas
  * que requieren user autenticado y reqadmin cuando se requiere el admin*/
-
