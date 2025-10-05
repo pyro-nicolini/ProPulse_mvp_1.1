@@ -8,6 +8,7 @@ const obtenerCarrito = async (id_usuario) => {
     );
     if (rows.length === 0) return null;
     const carro = rows[0];
+
     const items = await pool.query(
       `SELECT d.id_item, d.id_carrito, d.id_producto, d.precio_fijo, d.cantidad, d.subtotal,
               p.titulo, p.descripcion, p.stock, p.tipo, p.url_imagen
@@ -16,6 +17,7 @@ const obtenerCarrito = async (id_usuario) => {
        WHERE d.id_carrito = $1;`,
       [carro.id_carrito]
     );
+
     const total = await pool.query(
       `SELECT COALESCE(SUM(d.subtotal), 0) AS sub_total,
               COALESCE(SUM(d.subtotal), 0) * 0.19 AS impuestos,
@@ -24,6 +26,7 @@ const obtenerCarrito = async (id_usuario) => {
        WHERE d.id_carrito = $1;`,
       [carro.id_carrito]
     );
+
     return { ...carro, items_carrito: items.rows, total: total.rows[0] };
   } catch {
     throw { code: 500, message: "Error al obtener carrito" };
@@ -50,6 +53,7 @@ const disminuirItemCarrito = async (id_carrito, id_producto) => {
     values
   );
   if (deleted.rows.length > 0) return deleted.rows[0];
+
   const updated = await pool.query(
     `UPDATE carritos_detalle SET cantidad = cantidad - 1, subtotal = (cantidad - 1) * precio_fijo WHERE id_carrito = $1 AND id_producto = $2 RETURNING *;`,
     values
@@ -80,6 +84,7 @@ const confirmarCarrito = async (id_usuario) => {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
+
     const carritoRes = await client.query(
       `SELECT * FROM carritos WHERE estado = 'abierto' AND id_usuario = $1;`,
       [id_usuario]
@@ -98,7 +103,7 @@ const confirmarCarrito = async (id_usuario) => {
     );
 
     for (const i of stockCheck.rows) {
-      if (i.tipo === "producto" && i.cantidad > i.stock) {
+      if (i.tipo === "producto" && i.stock !== null && i.cantidad > i.stock) {
         throw { code: 400, message: `Stock insuficiente para ${i.titulo}` };
       }
     }
@@ -121,7 +126,9 @@ const confirmarCarrito = async (id_usuario) => {
     await client.query(
       `UPDATE productos SET stock = stock - cd.cantidad
        FROM carritos_detalle cd
-       WHERE productos.id_producto = cd.id_producto AND cd.id_carrito = $1 AND productos.tipo = 'producto';`,
+       WHERE productos.id_producto = cd.id_producto 
+       AND cd.id_carrito = $1 
+       AND productos.tipo = 'producto';`,
       [id_carrito]
     );
 
@@ -150,6 +157,7 @@ const obtenerPedidosUsuario = async (id_usuario) => {
     `SELECT * FROM pedidos WHERE id_usuario = $1 ORDER BY fecha_creacion DESC;`,
     [id_usuario]
   );
+
   const pedidos = [];
   for (const p of rows) {
     const items = await pool.query(
@@ -161,6 +169,7 @@ const obtenerPedidosUsuario = async (id_usuario) => {
     );
     pedidos.push({ ...p, items_pedido: items.rows });
   }
+
   return pedidos;
 };
 
