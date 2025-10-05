@@ -69,7 +69,8 @@ async function getLikesDelUserModel(id_usuario) {
     SELECT f.id_producto,
            p.titulo,
            p.url_imagen,
-           p.likes_count
+           p.likes_count,
+           p.tipo
     FROM favoritos f
     INNER JOIN productos p ON f.id_producto = p.id_producto
     WHERE f.id_usuario = $1;
