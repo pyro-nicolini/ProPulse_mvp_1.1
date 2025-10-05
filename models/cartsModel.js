@@ -86,43 +86,55 @@ const confirmarCarrito = async (id_usuario) => {
     );
     if (carritoRes.rows.length === 0)
       throw { code: 400, message: "No hay carrito abierto para este usuario" };
+
     const { id_carrito } = carritoRes.rows[0];
+
     const stockCheck = await client.query(
-      `SELECT cd.id_producto, cd.cantidad, p.stock, p.titulo
+      `SELECT cd.id_producto, cd.cantidad, p.stock, p.titulo, p.tipo
        FROM carritos_detalle cd
        INNER JOIN productos p ON cd.id_producto = p.id_producto
        WHERE cd.id_carrito = $1;`,
       [id_carrito]
     );
-    for (const i of stockCheck.rows)
-      if (i.cantidad > i.stock)
+
+    for (const i of stockCheck.rows) {
+      if (i.tipo === "producto" && i.cantidad > i.stock) {
         throw { code: 400, message: `Stock insuficiente para ${i.titulo}` };
+      }
+    }
+
     const pedido = await client.query(
       `INSERT INTO pedidos (id_usuario, total_pedido)
        VALUES ($1, (SELECT COALESCE(SUM(subtotal), 0) FROM carritos_detalle WHERE id_carrito = $2))
        RETURNING *;`,
       [id_usuario, id_carrito]
     );
+
     const id_pedido = pedido.rows[0].id_pedido;
+
     await client.query(
       `INSERT INTO pedidos_detalle (id_pedido, id_producto, precio_fijo, cantidad, subtotal)
        SELECT $1, id_producto, precio_fijo, cantidad, subtotal FROM carritos_detalle WHERE id_carrito = $2;`,
       [id_pedido, id_carrito]
     );
+
     await client.query(
       `UPDATE productos SET stock = stock - cd.cantidad
        FROM carritos_detalle cd
-       WHERE productos.id_producto = cd.id_producto AND cd.id_carrito = $1;`,
+       WHERE productos.id_producto = cd.id_producto AND cd.id_carrito = $1 AND productos.tipo = 'producto';`,
       [id_carrito]
     );
+
     await client.query(
       `UPDATE carritos SET estado = 'cerrado' WHERE id_carrito = $1 AND estado = 'abierto';`,
       [id_carrito]
     );
+
     await client.query(
       `INSERT INTO carritos (id_usuario, estado) VALUES ($1, 'abierto');`,
       [id_usuario]
     );
+
     await client.query("COMMIT");
     return { pedido: pedido.rows[0] };
   } catch (error) {
