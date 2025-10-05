@@ -1,111 +1,214 @@
 const cartsModel = require("../models/cartsModel.js");
 
-/* Status
-200 OK → Petición exitosa.
-201 Created → Recurso creado correctamente.
-204 No Content → Éxito sin devolver contenido.
-400 Bad Request → Petición malformada o datos inválidos.
-401 Unauthorized → No autenticado (token inválido o faltante).
-403 Forbidden → Autenticado, pero sin permisos.
-404 Not Found → Recurso no encontrado.
-409 Conflict → Conflicto con reglas de negocio (ej. duplicado, stock insuficiente).
-500 Internal Server Error → Error inesperado en el servidor.
-503 Service Unavailable → Servicio no disponible (temporalmente caído). 
+/* Códigos de estado HTTP usados:
+   200 OK → Éxito en la petición
+   201 Created → Recurso creado correctamente
+   204 No Content → Éxito sin contenido devuelto
+   400 Bad Request → Datos inválidos
+   401 Unauthorized → Token ausente o inválido
+   403 Forbidden → Sin permisos
+   404 Not Found → Recurso no encontrado
+   409 Conflict → Conflicto (stock, duplicados, etc.)
+   500 Internal Server Error → Error inesperado
+   503 Service Unavailable → Servicio no disponible temporalmente
 */
 
+
+//  Carrito del usuario
 const getCart = async (req, res) => {
   try {
-    const miCarrito = await cartsModel.obtenerCarrito(req.user.id);
-    res.status(200).json(miCarrito);
+    const carrito = await cartsModel.obtenerCarrito(req.user.id);
+
+    if (!carrito) {
+      return res.status(404).json({ message: "No hay carrito abierto." });
+    }
+
+    res.status(200).json(carrito);
   } catch (err) {
-    console.error("Error en getCart:", err);
-    res.status(err.code || 500).json({ error: "Error al obtener cart" });
+    console.error("❌ Error en getCart:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al obtener el carrito." });
   }
 };
 
-// FUNCION CREAR CARRITO SE INTEGRO AL CREAR USUARIO.
-// const createCart = async (req, res) => {
-//   try {
-//     const miCarrito = await cartsModel.crearCarrito(req.user.id);
-//     res.status(201).send(miCarrito);
-//   } catch (err) {
-//     console.error("Error en createCart:", err);
-//     res.status(err.code || 500).json({ error: "Error al crear cart" });
-//   }
-// };
+
+//  Agregar producto
 
 const addItemCart = async (req, res) => {
-  const { id_carrito, id_producto } = req.body;
-  const result = await cartsModel.agregarItemCarrito(id_carrito, id_producto);
-  res.status(200).send(result);
+  try {
+    const { id_carrito, id_producto } = req.body;
+
+    if (!id_carrito || !id_producto) {
+      return res.status(400).json({ error: "Faltan datos requeridos." });
+    }
+
+    const result = await cartsModel.agregarItemCarrito(id_carrito, id_producto);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en addItemCart:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al agregar producto al carrito." });
+  }
 };
 
+//  Disminuir cantidad
 const removeItemCart = async (req, res) => {
-  const { id_carrito, id_producto } = req.body;
-  const result = await cartsModel.disminuirItemCarrito(id_carrito, id_producto);
-  res.status(204).send(result);
+  try {
+    const { id_carrito, id_producto } = req.body;
+
+    if (!id_carrito || !id_producto) {
+      return res.status(400).json({ error: "Faltan datos requeridos." });
+    }
+
+    const result = await cartsModel.disminuirItemCarrito(
+      id_carrito,
+      id_producto
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en removeItemCart:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al disminuir cantidad." });
+  }
 };
 
+//  Eliminar producto
 const deleteItemCart = async (req, res) => {
-  const { id_carrito, id_producto } = req.body;
-  const result = await cartsModel.eliminarProductoDelCarrito(
-    id_carrito,
-    id_producto
-  );
-  res.status(204).send(result);
+  try {
+    const { id_carrito, id_producto } = req.body;
+
+    if (!id_carrito || !id_producto) {
+      return res.status(400).json({ error: "Faltan datos requeridos." });
+    }
+
+    const result = await cartsModel.eliminarProductoDelCarrito(
+      id_carrito,
+      id_producto
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en deleteItemCart:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al eliminar producto del carrito." });
+  }
 };
 
-// Antiguo método para calcular el total, PEEEEERO carrito esta devolviendo eso.
+//  Totales del carrito
 const getTotalCart = async (req, res) => {
-  const { id_carrito } = req.body;
-  const result = await cartsModel.obtenerTotalCarrito(id_carrito);
-  res.status(200).json(result);
+  try {
+    const { id_carrito } = req.body;
+
+    if (!id_carrito) {
+      return res.status(400).json({ error: "Debe especificar un carrito." });
+    }
+
+    const result = await cartsModel.obtenerTotalCarrito(id_carrito);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en getTotalCart:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al calcular el total del carrito." });
+  }
 };
 
+//  Confirmar pedido
 const checkOutCart = async (req, res) => {
-  const result = await cartsModel.confirmarCarrito(req.user.id);
-  res.status(201).send(result);
+  try {
+    const result = await cartsModel.confirmarCarrito(req.user.id);
+    res.status(201).json(result);
+  } catch (err) {
+    console.error("❌ Error en checkOutCart:", err);
+    res
+      .status(err.code || 500)
+      .json({
+        error:
+          err.message ||
+          "Error al confirmar el pedido. Verifica stock o conexión.",
+      });
+  }
 };
 
+//  Pedidos del usuario
 const getUserOrders = async (req, res) => {
-  const result = await cartsModel.obtenerPedidosUsuario(req.user.id);
-  res.status(200).json(result);
+  try {
+    const result = await cartsModel.obtenerPedidosUsuario(req.user.id);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en getUserOrders:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al obtener tus pedidos." });
+  }
 };
 
+//  Admin: Actualizar pedido
 const admin_updateOrder = async (req, res) => {
-  const { id_pedido, nuevo_estado } = req.body;
-  const result = await cartsModel.admin_actualizarEstadoPedido(
-    id_pedido,
-    nuevo_estado
-  );
-  res.status(201).send(result);
+  try {
+    const { id_pedido, nuevo_estado } = req.body;
+
+    if (!id_pedido || !nuevo_estado) {
+      return res.status(400).json({ error: "Datos incompletos." });
+    }
+
+    const result = await cartsModel.admin_actualizarEstadoPedido(
+      id_pedido,
+      nuevo_estado
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en admin_updateOrder:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al actualizar el pedido." });
+  }
 };
 
+//  Admin: Borrar carrito
 const admin_deleteCart = async (req, res) => {
-  const { id } = req.body;
-  const result = await cartsModel.admin_borrarCarrito(id);
-  res.status(201).send(result);
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "Debe indicar el id del usuario." });
+    }
+
+    const result = await cartsModel.admin_borrarCarrito(id);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en admin_deleteCart:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al eliminar carrito." });
+  }
 };
 
+//  Admin: Listar pedidos
 const admin_getAllOrders = async (req, res) => {
-  const result = await cartsModel.admin_obtenerTodosPedidos();
-  res.status(201).send(result);
+  try {
+    const result = await cartsModel.admin_obtenerTodosPedidos();
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("❌ Error en admin_getAllOrders:", err);
+    res
+      .status(err.code || 500)
+      .json({ error: err.message || "Error al obtener todos los pedidos." });
+  }
 };
 
 module.exports = {
   getCart,
-
   addItemCart,
   removeItemCart,
   deleteItemCart,
-
   getTotalCart,
-
   checkOutCart,
   getUserOrders,
-
   admin_deleteCart,
-
   admin_updateOrder,
   admin_getAllOrders,
 };
