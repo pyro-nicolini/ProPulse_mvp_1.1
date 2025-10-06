@@ -41,7 +41,13 @@ const getProductsById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const { titulo, descripcion, stock, tipo, url_imagen, precio } = req.body;
+    const id_admin = req.user?.id; // <- importante
+    if (!id_admin) {
+      return res.status(403).json({ error: "Acceso denegado" });
+    }
+
     const result = await productsModel.crearProducto(
+      id_admin,
       titulo,
       descripcion,
       stock,
@@ -49,11 +55,14 @@ const createProduct = async (req, res) => {
       url_imagen,
       precio
     );
+
     res.status(201).json(result);
   } catch (err) {
+    console.error("Error crearProducto:", err);
     res.status(500).json({ error: "Error al crear producto" });
   }
 };
+
 
 // PUT actualizar producto
 const updateProduct = async (req, res) => {

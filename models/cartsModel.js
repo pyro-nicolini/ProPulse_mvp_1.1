@@ -215,15 +215,18 @@ const obtenerPedidosUsuario = async (id_usuario) => {
   return pedidos;
 };
 
-const admin_actualizarEstadoPedido = async (id_pedido, nuevo_estado) => {
+const admin_actualizarEstadoPedido = async (id_pedido, estado) => {
   const { rows } = await pool.query(
     `UPDATE pedidos
-     SET estado = $1
+     SET estado = $1, fecha_modificacion = NOW()
      WHERE id_pedido = $2
      RETURNING *;`,
-    [nuevo_estado, id_pedido]
+    [estado, id_pedido]
   );
-  return rows[0];
+
+  const pedido = rows[0];
+  if (!pedido) return null;
+  return pedido;
 };
 
 const admin_borrarCarrito = async (id_usuario) => {
@@ -238,7 +241,19 @@ const admin_borrarCarrito = async (id_usuario) => {
 
 const admin_obtenerTodosPedidos = async () => {
   const { rows } = await pool.query(`SELECT * FROM pedidos;`);
-  return rows;
+  const pedidos = [];
+  for (const p of rows) {
+    const items = await pool.query(
+      `SELECT pd.id_detalle, pd.id_producto, pr.titulo, pr.url_imagen,
+              pd.cantidad, pd.precio_fijo, pd.subtotal, pr.tipo
+       FROM pedidos_detalle pd
+       INNER JOIN productos pr ON pd.id_producto = pr.id_producto
+       WHERE pd.id_pedido = $1;`,
+      [p.id_pedido]
+    );
+    pedidos.push({ ...p, items_pedido: items.rows });
+  }
+  return pedidos;
 };
 
 module.exports = {

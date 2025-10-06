@@ -58,7 +58,7 @@ WHERE estado = 'abierto';
 CREATE TABLE IF NOT EXISTS carritos_detalle (
   id_item SERIAL PRIMARY KEY,
   id_carrito INT NOT NULL REFERENCES carritos(id_carrito) ON DELETE CASCADE,
-  id_producto INT NOT NULL REFERENCES productos(id_producto),
+  id_producto INT NOT NULL REFERENCES productos(id_producto) ON DELETE CASCADE,
   precio_fijo NUMERIC(12,0) NOT NULL CHECK (precio_fijo >= 0),
   cantidad INT NOT NULL DEFAULT 1 CHECK (cantidad >= 1),
   subtotal NUMERIC(12,0) NOT NULL CHECK (subtotal >= 0),
@@ -73,13 +73,15 @@ CREATE TABLE IF NOT EXISTS pedidos (
     estado IN ('pendiente','pagado','enviado','entregado','cancelado')
   ),
   fecha_creacion TIMESTAMP NOT NULL DEFAULT NOW(),
+  fecha_modificacion TIMESTAMP NOT NULL DEFAULT NOW(),
+  direccion_envio VARCHAR(255) NOT NULL DEFAULT '',
   total_pedido NUMERIC(12,0) NOT NULL CHECK (total_pedido >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS pedidos_detalle (
   id_detalle SERIAL PRIMARY KEY,
   id_pedido INT NOT NULL REFERENCES pedidos(id_pedido) ON DELETE CASCADE,
-  id_producto INT NOT NULL REFERENCES productos(id_producto),
+  id_producto INT NOT NULL REFERENCES productos(id_producto) ON DELETE CASCADE,
   precio_fijo NUMERIC(12,0) NOT NULL CHECK (precio_fijo >= 0),
   cantidad INT NOT NULL CHECK (cantidad >= 1),
   subtotal NUMERIC(12,0) NOT NULL CHECK (subtotal >= 0),

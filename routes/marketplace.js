@@ -24,7 +24,7 @@ router.delete(
   reqAdmin,
   cartsController.admin_deleteCart
 );
-router.put("/pedidos/admin", reqAdmin, cartsController.admin_updateOrder);
+router.put("/pedidos/admin", reqAuth, reqAdmin, cartsController.admin_updateOrder);
 router.get(
   "/pedidos/admin",
   reqAuth,

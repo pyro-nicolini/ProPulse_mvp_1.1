@@ -13,6 +13,7 @@ const obtenerProducto = async (id) => {
 };
 
 const crearProducto = async (
+  id_admin,
   titulo,
   descripcion,
   stock,
@@ -20,14 +21,14 @@ const crearProducto = async (
   url_imagen,
   precio
 ) => {
-  const values = [titulo, descripcion, stock, tipo, url_imagen, precio];
+  const values = [id_admin, titulo, descripcion, stock, tipo, url_imagen, precio];
   const query = `
-    INSERT INTO productos (titulo, descripcion, stock, tipo, url_imagen, precio) 
-    VALUES ($1, $2, $3, $4, $5, $6) 
+    INSERT INTO productos (id_admin, titulo, descripcion, stock, tipo, url_imagen, precio)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
   `;
   const result = await pool.query(query, values);
-  return result.rows;
+  return result.rows[0];
 };
 
 const borrarProducto = async (id_producto) => {

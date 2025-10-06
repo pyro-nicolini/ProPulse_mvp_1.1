@@ -116,15 +116,25 @@ const getUserOrders = async (req, res) => {
 
 const admin_updateOrder = async (req, res) => {
   try {
-    const { id_pedido, nuevo_estado } = req.body;
-    if (!id_pedido || !nuevo_estado)
-      return res.status(400).json({ error: "Datos incompletos." });
+    const { id_pedido, estado } = req.body;
 
-    const result = await cartsModel.admin_actualizarEstadoPedido(id_pedido, nuevo_estado);
-    res.status(200).json(result);
+    if (!id_pedido || !estado) {
+      return res.status(400).json({ error: "Datos incompletos." });
+    }
+
+    const pedidoActualizado = await cartsModel.admin_actualizarEstadoPedido(id_pedido, estado);
+
+    if (!pedidoActualizado) {
+      return res.status(404).json({ error: "Pedido no encontrado." });
+    }
+
+    res.status(200).json({
+      message: "Estado actualizado correctamente.",
+      pedido: pedidoActualizado,
+    });
   } catch (err) {
     console.error("❌ Error en admin_updateOrder:", err);
-    res.status(err.code || 500).json({
+    res.status(500).json({
       error: err.message || "Error al actualizar el estado del pedido.",
     });
   }
