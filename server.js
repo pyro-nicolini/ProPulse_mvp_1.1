@@ -38,15 +38,61 @@ app.use("/", productsRoutes);
 app.use("/", marketplaceRoutes);
 
 app.get("/", (_, res) => {
-  res.json({
-    message: "Bienvenido a ProPulse API",
-    version: "1.0.0",
+  res.status(200).json({
+    api: "ProPulse API",
+    version: "1.3.0",
+    estado: "✅ Activa y funcionando correctamente",
+    descripcion:
+      "API REST Fullstack para productos, servicios, usuarios y operaciones del marketplace fitness ProPulse.",
     endpoints: {
-      users: "/auth/users",
-      products: "/productos",
-      carts: "/carritos",
-      orders: "/pedidos",
-      favorites: "/favoritos",
+      auth: {
+        base: "/auth",
+        me: "/auth/me",
+        register: "/auth/register",
+        login: "/auth/login",
+      },
+      usuarios: {
+        base: "/usuarios",
+        admin_get: "/usuarios",
+        update: "/usuarios/:id",
+        delete: "/usuarios/:id",
+      },
+      productos: {
+        base: "/productos",
+        detalle: "/productos/:id",
+        admin_crear: "/productos/admin",
+        admin_actualizar: "/productos/admin/:id",
+        admin_borrar: "/productos/admin/:id",
+      },
+      favoritos: {
+        base: "/likes",
+        add: "/likes/:id_producto",
+        remove: "/likes/:id_producto",
+      },
+      resenas: {
+        base: "/resenas",
+        producto: "/resenas/:id",
+        add: "/resenas/:id",
+        update: "/resenas/:id",
+        delete: "/resenas/:id",
+      },
+      carritos: {
+        base: "/carritos/me",
+        agregar: "/carritos/detalle",
+        disminuir: "/carritos/detalle (PATCH)",
+        eliminar: "/carritos/detalle (DELETE)",
+      },
+      pedidos: {
+        base: "/pedidos",
+        misPedidos: "/pedidos/me",
+        checkout: "/pedidos/checkout",
+        detalle: "/pedidos/:id",
+        admin_listar: "/pedidos/admin",
+        admin_actualizar: "/pedidos/admin",
+      },
+      utils: {
+        autenticacion: "asegurandoLaAuth() → valida sesión activa",
+      },
     },
   });
 });
